@@ -14,15 +14,17 @@ Architecture behavior of tb_ALU IS
 		ALUA							:	in STD_LOGIC_VECTOR(15 downto 0);
 		ALUB							:	in STD_LOGIC_VECTOR(15 downto 0);
 		ALUOut						:	out STD_LOGIC_VECTOR(15 downto 0);
-		EnAlu							: 	in STD_LOGIC
-		--carryFlag, zeroFlag		: 	out STD_LOGIC
+		EnAlu							: 	in STD_LOGIC;
+		carryFlag, zeroFlag		: 	out STD_LOGIC
 	);
 	END COMPONENT;
 	
-	signal ALUA 	: STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
-   signal ALUB 	: STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
-   signal opCode 	: STD_LOGIC_VECTOR(4 downto 0) := (others => '0');
-	signal EnAlu	: STD_LOGIC;
+	signal ALUA 					: STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+   signal ALUB 					: STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+   signal opCode 					: STD_LOGIC_VECTOR(4 downto 0) := (others => '0');
+	signal EnAlu					: STD_LOGIC;
+	signal carryFlag, zeroFlag	: STD_LOGIC;
+	
 
   --Outputs
    signal ALUOut : STD_LOGIC_VECTOR(15 downto 0);
@@ -30,11 +32,13 @@ Architecture behavior of tb_ALU IS
 	BEGIN
 	
 	uut: ALU PORT MAP(
-		ALUA 		=> ALUA,
-		ALUB 		=> ALUB,
-		ALUOut 	=> ALUOut,
-		opCode 	=> opCode,
-		EnAlu 	=> EnAlu
+		ALUA 			=> ALUA,
+		ALUB 			=> ALUB,
+		ALUOut 		=> ALUOut,
+		opCode 		=> opCode,
+		EnAlu 		=> EnAlu,
+		carryFlag	=> carryFlag,
+		zeroFlag		=> zeroFlag
 	);
 	
 	process
@@ -111,6 +115,15 @@ Architecture behavior of tb_ALU IS
 		EnAlu <= '1';
 		wait for 10 ns;
 		
+		-- Test OPCODE 01000 -> addition 0xFFFF + 0x0001 = 0x0001 + carry
+		ALUA <= x"FFFF";
+		ALUB <= x"0001";
+		opCode <= "01000";
+		EnAlu <= '1';
+		wait for 10 ns;
+		
+		
+		
 		-- Test OPCODE 01001 -> subtraction 2 - 1 
 		ALUA <= x"0005";
 		ALUB <= x"0001";
@@ -160,7 +173,6 @@ Architecture behavior of tb_ALU IS
 		opCode <= "00001";
 		EnAlu <= '0';
 		wait for 10 ns;
-		
 		
 	end process;
 end behavior;
