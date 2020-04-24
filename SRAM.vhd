@@ -5,46 +5,40 @@ Use IEEE.NUMERIC_STD.all;
 
 entity SRAM is
 	generic (
-		B: integer := 16;
-		W:	integer := 7
+		B: integer := 16;		-- Number of bits in SRAM
+		W: integer := 7		-- Number of SRAM addresses
 	);
 	
 	port (
-		addr			: 	in STD_LOGIC_VECTOR(W-1 downto 0);
-		dataInOut	:	inout STD_LOGIC_VECTOR(B-1 downto 0);
-		en				:	in STD_LOGIC;
-		enWr			:	in STD_LOGIC;
-		clk			:	in STD_LOGIC
-		
+			addr						: in STD_LOGIC_VECTOR(W-1 downto 0);			-- Address inputs
+			dataInOut				: inout STD_LOGIC_VECTOR(B-1 downto 0);		-- Data input & output
+			En							: in STD_LOGIC;										-- Enable
+			EnWr						: in STD_LOGIC;										-- Write enable input
+			clk						: in STD_LOGIC											--clock input
+
 	);
 end SRAM;
 
-Architecture behavior of SRAM is
-	type SRAM_type is array (2**W-1 downto 0) of 
+
+architecture Behavioral of SRAM is
+	type SRAM_type is array (2**W-1 downto 0) of		-- Create an array of 127 SRAM registers that contains 16 bit of data
 		STD_LOGIC_VECTOR(B-1 downto 0);
-	signal array_reg : SRAM_type := (others => x"0000");
-	
-	signal dataIn	: STD_LOGIC_VECTOR(B-1 downto 0);
-	signal dataOut	: STD_LOGIC_VECTOR(B-1 downto 0);
-	signal store	: STD_LOGIC_VECTOR(B-1 downto 0);
+	signal array_reg			: SRAM_type;				-- Create a signal that enables references to the SRAM addresses
+	signal addrPointer		: Integer;					-- For making addr to integer
 begin
-		
-		dataOut <= array_reg(to_integer(unsigned(addr)));
-		
-		array_reg(to_integer(unsigned(addr))) <= dataIn;
-		
-		dataInOut <= dataOut when enWr='1' else (others=>'Z');
-		dataIn <= dataInOut;
-		
-		--process (clk, addr, dataInOut, enWr)
-		--begin
-		--	if (rising_edge(clk)) then
-		--		if (enWr = '1' and en = '1') then
-					
-					--array_reg(to_integer(unsigned(addr))) <= dataInOut;
-		--		end if;
-		--	end if;
-		--end process;
-			
-end behavior;
+
+	addrPointer <= to_integer(unsigned(addr));
 	
+	
+	-- Process for writing to the ram
+	process (clk, dataInOut, En, EnWr, addrPointer)
+	begin
+		if (rising_edge(clk)) then
+			if (EnWr = '1' and En = '1') then
+				array_reg(addrPointer) <= dataInOut;		-- If write is enabled then write dataIn to addrC on a rising edge
+			end if;
+		end if;
+	end process;
+	
+	dataInOut <= array_reg(addrPointer) when (En = '1' and EnWr = '0') else (others=>'Z'); --Makes tri state buffer on output, enabled when En = 1 and EnWr = 0
+end Behavioral;
