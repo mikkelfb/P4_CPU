@@ -21,7 +21,7 @@ Architecture behavior of tb_GPR IS
 	);
 	END COMPONENT;
 	
-	constant T: time := 20 ns;
+	constant T: time := 20 ns;																	-- Used to set the clock speed
 	
 	signal addrA, addrB, addrC		: 	STD_LOGIC_VECTOR(2 downto 0);
 	signal EnWr							: 	STD_LOGIC;
@@ -31,7 +31,7 @@ Architecture behavior of tb_GPR IS
 	signal ALUA							:	STD_LOGIC_VECTOR(15 downto 0);
 	signal ALUB							:	STD_LOGIC_VECTOR(15 downto 0);
 	
-	signal addrCounter				:	STD_LOGIC_VECTOR(2 downto 0) := "000";
+	signal addrCounter				:	STD_LOGIC_VECTOR(2 downto 0) := "000";		-- Counter used to switch between addresses
 	
 	begin
 	
@@ -56,29 +56,27 @@ Architecture behavior of tb_GPR IS
 		
 		process
 		begin
-			EnWr <= '1';
+			EnWr <= '1';												-- Enables write
 		
-			for i in 0 to 7 loop
-				addrA <= addrCounter;
-				addrB <= addrCounter;
+			for i in 0 to 7 loop										-- Do 8 loops to fill up all of the registers
 				addrC <= addrCounter;
 				
-				dataIn <= "0000000000000" & addrCounter;
+				dataIn <= "0000000000000" & addrCounter;		-- Set the data input to whatever is in addrCounter
 				
-				addrCounter <= addrCounter + "001";
+				addrCounter <= addrCounter + "001";				-- Set addrCounter to the next address
 				
-				wait until falling_edge(clk);
+				wait until falling_edge(clk);						-- Waits until clock is on a falling edge until doing anything else
 				
 			end loop;
 			
-			EnWr <= '0';
-			addrCounter <= "000";
+			EnWr <= '0';												-- Disables write
+			addrCounter <= "000";									-- Resets addrCounter
 			
-			for i in 0 to 7 loop
-				addrA <= addrCounter;
-				addrB <= addrCounter + "001";
+			for i in 0 to 7 loop										-- Do 8 loops to output what was previously put in the registers
+				addrA <= addrCounter;								-- Output what is in addrA
+				addrB <= addrCounter + "001";						-- Output what is in the following addrB		
 				
-				addrCounter <= addrCounter + "001";
+				addrCounter <= addrCounter + "001";				-- Set addrCounter to the next address
 				
 				wait until falling_edge(clk);
 			end loop;
