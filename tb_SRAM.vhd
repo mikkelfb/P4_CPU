@@ -27,10 +27,7 @@ Architecture behavior of tb_SRAM IS
 	signal EnWr						: STD_LOGIC;										
 	signal clk						: STD_LOGIC;
 	signal addrCounter			: STD_LOGIC_VECTOR(6 downto 0) := "0000000";
-	signal dataOut					: STD_LOGIC_VECTOR(15 downto 0);		
-	signal dataIn					: STD_LOGIC_VECTOR(15 downto 0);
-	
-	
+	signal testData				: STD_LOGIC_VECTOR(15 downto 0);		
 	
 	begin
 	
@@ -41,6 +38,9 @@ Architecture behavior of tb_SRAM IS
 			En				=> En,
 			EnWr 			=> EnWr
 		);
+		
+		
+	dataInOut <= testData when (En = '1' and EnWr = '1') else (others=>'Z'); --Fix testbench by making input high impedans when EnWr is off.
 		
 		process
 		begin
@@ -56,8 +56,7 @@ Architecture behavior of tb_SRAM IS
 			EnWr <= '1';
 			for i in 0 to 127 loop
 				addr <= addrCounter;
-				dataIn <= "000000000" & addrCounter;
-				dataInOut <= dataIn;
+				testData <= "000000000" & addrCounter;
 				addrCounter <= addrCounter + "0000001";	
 				wait until falling_edge(clk);	
 			end loop;
@@ -71,9 +70,7 @@ Architecture behavior of tb_SRAM IS
 			addrCounter <= "0000000";
 			
 			for i in 0 to 127 loop
-				
 				addr <= addrCounter;
-				dataOut <= dataInOut;
 				addrCounter <= addrCounter + "0000001";	
 				wait until falling_edge(clk);	
 			end loop;
