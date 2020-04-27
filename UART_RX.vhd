@@ -65,19 +65,19 @@ begin
 		rxDoneTick <= '0';
 		
 		case stateReg is
-			when idle =>									-- Case if the current state is 'idle'
-				if (rx = '0') then						-- If the rx bit is set to 0
-					stateNext <= start;					-- Set the next state to be the start state
-					sNext <= (others=>'0');				-- Set the sNext tick counter to all 0's. This makes sure that the counter is reset for when going into the start state.
+			when idle =>											-- Case if the current state is 'idle'
+				if (rx = '0') then								-- If the rx bit is set to 0
+					stateNext <= start;							-- Set the next state to be the start state
+					sNext <= (others=>'0');						-- Set the sNext tick counter to all 0's. This makes sure that the counter is reset for when going into the start state.
 				end if;
-			when start =>									-- Case if the current state is 'start'
-				if (sTick = '1') then					-- If there is an enable tick from the baud generator
-					if sReg = 7 then						-- If the start bit has been identified
-						stateNext <= data;				-- Set the next state to the 'data' state
-						sNext <= (others=>'0');			-- Reset the sNext register
-						nNext <= (others=>'0');			-- Reset the nNext register. This clears so it can be utiliezed in the 'data' state
+			when start =>											-- Case if the current state is 'start'
+				if (sTick = '1') then							-- If there is an enable tick from the baud generator
+					if sReg = 7 then								-- If the start bit has been identified
+						stateNext <= data;						-- Set the next state to the 'data' state
+						sNext <= (others=>'0');					-- Reset the sNext register
+						nNext <= (others=>'0');					-- Reset the nNext register. This clears so it can be utiliezed in the 'data' state
 					else 
-						sNext <= sReg + 1;				-- If the start bit has not yet been identified. Count the tick one up. 
+						sNext <= sReg + 1;						-- If the start bit has not yet been identified. Count the tick one up. 
 					end if;
 				end if;
 			when data =>											-- Case if the current state is 'data'
@@ -86,7 +86,7 @@ begin
 						sNext <= (others=>'0');					--	Reset the clock cycle tick counter
 						bNext <= rx & bReg(7 downto 1);		-- Shift the current bit into the register for storage
 						if nReg = (DBIT-1) then					-- If there are no more data bits
-							stateNext <= stop;						-- Set the state to 'stop'
+							stateNext <= stop;					-- Set the state to 'stop'
 						else											-- If there are more data bits
 							nNext <= nReg + 1;					-- Count up the register that contains the number of bits that has been cycled through.
 						end if;										
