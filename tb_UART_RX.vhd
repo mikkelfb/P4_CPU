@@ -49,13 +49,6 @@ Architecture behavioral of tb_UART_RX is
 		wait for T/2;
 	end process;
 	
-	process
-	begin
-		sTick <= '0';
-		wait for T/16;
-		sTick <= '1';
-		wait for T/16;
-	end process;
 	
 	process
 	begin
@@ -64,7 +57,6 @@ Architecture behavioral of tb_UART_RX is
 		wait until falling_edge(clk);
 		
 		for i in 0 to 7 loop
-			rx <= not rx;
 			wait until falling_edge(clk);
 		end loop;
 		
