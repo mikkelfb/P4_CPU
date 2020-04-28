@@ -59,12 +59,12 @@ begin
 	-- Register for read and write pointers
 	process (clk, reset)
 	begin
-		if (reset = '1') then
+		if (reset = '1') then																			-- If reset is enabled, reset all of the pointer registers so the all point to the head of the stack
 			wPtrReg <= (others => '0');
 			rPtrReg <= (others => '0');
 			fullReg <= '0';
 			emptyReg <= '1';
-		elsif (rising_edge(clk)) then
+		elsif (rising_edge(clk)) then																	-- On a rising edge, set all of the pointer registers to the next one
 			wPtrReg <= wPtrNext;
 			rPtrReg <= rPtrNext;
 			fullReg <= fullNext;
@@ -73,37 +73,37 @@ begin
 	end process;
 	
 	-- Successive pointer values
-	wPtrSucc <= std_logic_vector(unsigned(wPtrReg) + 1);
-	rPtrSucc <= std_logic_vector(unsigned(rPtrReg) + 1);
+	wPtrSucc <= std_logic_vector(unsigned(wPtrReg) + 1);										-- Set the succesive pointer to contain the address of the next empty register
+	rPtrSucc <= std_logic_vector(unsigned(rPtrReg) + 1);										-- Set the succesive pointer to contain the address of the next empty register
 	
 	-- Next-state logic for read and write pointers
 	wrOp <= wr & rd;
 	
-	process (wPtrReg, wPtrSucc, rPtrReg, rPtrSucc, wrOp, emptyReg, fullReg)
+	process (wPtrReg, wPtrSucc, rPtrReg, rPtrSucc, wrOp, emptyReg, fullReg)				
 	begin
-		wPtrNext <= wPtrReg;
+		wPtrNext <= wPtrReg;																				-- Reset the registers
 		rPtrNext <= rPtrReg;
 		fullNext <= fullReg;
 		emptyNext <= emptyReg;
-		case wrOp is
-			when "00" => -- no op
-			when "01" => -- Read
-				if (emptyReg /= '1') then -- Not empty
-					rPtrNext <= rPtrSucc;
+		case wrOp is																						-- Case for the different write operations
+		when "00" => 																						-- If the operation is 00, then do nothing
+			when "01" => 																					-- If the operation is 01, then do read
+				if (emptyReg /= '1') then 																-- Check if the FIFO is empty
+					rPtrNext <= rPtrSucc;																-- Set the next pointer
 					fullNext <= '0';
 					if (rPtrSucc=wPtrReg) then
-						emptyNext <= '1';
+						emptyNext <= '1';																	
 					end if;
 				end if;
-			when "10" => -- Write
-				if (fullReg /= '1') then -- Not full
+			when "10" => 																					-- If the operation is 10, then do write
+				if (fullReg /= '1') then 																-- Check if the FIFO is full
 					wPtrNext <= wPtrSucc;
 					emptyNext <= '0';
 					if (wPtrSucc=rPtrReg) then
 						fullNext <= '1';
 					end if;
 				end if;
-			when others => -- write/read
+			when others => 																				-- write/read
 				wPtrNext <= wPtrSucc;
 				rPtrNext <= rPtrSucc;
 		end case;
