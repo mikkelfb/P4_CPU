@@ -50,6 +50,7 @@ Architecture behavioral of tb_UART_RX is
 	end process;
 	
 	
+	
 	process
 	begin
 		rx <= '0';
