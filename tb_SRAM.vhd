@@ -26,7 +26,7 @@ Architecture behavior of tb_SRAM IS
 	signal En						: STD_LOGIC;										
 	signal EnWr						: STD_LOGIC;										
 	signal clk						: STD_LOGIC;
-	signal addrCounter			: STD_LOGIC_VECTOR(6 downto 0) := "0000000";
+	signal addrCounter			: STD_LOGIC_VECTOR(6 downto 0) := "1111100";
 	signal testData				: STD_LOGIC_VECTOR(15 downto 0);		
 	
 	begin
@@ -54,7 +54,7 @@ Architecture behavior of tb_SRAM IS
 		begin
 			En <= '1';
 			EnWr <= '1';
-			for i in 0 to 127 loop
+			for i in 0 to 3 loop
 				addr <= addrCounter;
 				testData <= "000000000" & addrCounter;
 				addrCounter <= addrCounter + "0000001";	
@@ -67,9 +67,9 @@ Architecture behavior of tb_SRAM IS
 			EnWr <= '0';
 			wait until falling_edge(clk);
 			
-			addrCounter <= "0000000";
-			
-			for i in 0 to 127 loop
+			addrCounter <= "1111100";
+			wait until falling_edge(clk);
+			for i in 0 to 3 loop
 				addr <= addrCounter;
 				addrCounter <= addrCounter + "0000001";	
 				wait until falling_edge(clk);	

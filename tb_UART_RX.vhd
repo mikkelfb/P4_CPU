@@ -12,7 +12,7 @@ Architecture behavioral of tb_UART_RX is
 	port (
 		clk, reset			: 	in std_logic;
 		rx 					:	in std_logic;
-		sTick					:	in std_logic;
+		--sTick					:	in std_logic;
 		rxDoneTick			:	out std_logic;
 		dataOut				:	out std_logic_vector(7 downto 0)
 	);
@@ -20,12 +20,16 @@ Architecture behavioral of tb_UART_RX is
 	
 	
 	constant T: time := 20 ns;											-- Used to simulate a 50 MHz clock cycle
+	constant baudTime: time := 52 us;
+	
 	
 	signal clk			:	std_logic;									-- Create a signal for the clock
 	signal rx			:	std_logic;									-- Create a signal that carries the bits
-	signal sTick		:	std_logic;									-- Create a signal for the enable tick from the baud generator
+	--signal sTick		:	std_logic;									-- Create a signal for the enable tick from the baud generator
 	signal testData	:	std_logic_vector(7 downto 0);			-- Create a signal that contains the test data bit string
 	signal reset		:	std_logic;
+	signal rxDoneTick	: 	std_logic;
+	signal dataOut		: 	std_logic_vector(7 downto 0);
 	
 	begin
 	
@@ -33,11 +37,10 @@ Architecture behavioral of tb_UART_RX is
 			clk			=> clk,
 			reset			=> reset,
 			rx				=> rx,
-			sTick			=> sTick
-			--rxDoneTick 	=> rxDoneTick,
-			--dataOut		=> dataOut
+			--sTick			=> sTick
+			rxDoneTick 	=> rxDoneTick,
+			dataOut		=> dataOut
 		);
-		
 		reset <= '0';
 		
 	-- Create a process that simulates the rising and falling edge of a clock
@@ -54,16 +57,16 @@ Architecture behavioral of tb_UART_RX is
 	process
 	begin
 		rx <= '0';
-		
-		wait until falling_edge(clk);
+		wait for baudTime;
 		
 		for i in 0 to 7 loop
-			wait until falling_edge(clk);
+			rx <= not rx;
+			wait for baudTime;
 		end loop;
 		
 		rx <= '1';
-		wait until falling_edge(clk);
-		wait until falling_edge(clk);
+		wait for baudTime;
+		wait for baudTime;
 		
 	end process;
 	
