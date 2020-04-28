@@ -20,7 +20,7 @@ Architecture behavioral of tb_UART_RX is
 	
 	
 	constant T: time := 20 ns;											-- Used to simulate a 50 MHz clock cycle
-	constant baudTime: time := 52 us;
+	constant baudTime: time := 52 us;								-- Used to simulate unput, set for a baudrate at 19200
 	
 	
 	signal clk			:	std_logic;									-- Create a signal for the clock
@@ -56,15 +56,15 @@ Architecture behavioral of tb_UART_RX is
 	
 	process
 	begin
-		rx <= '0';
+		rx <= '0';					-- Sets rx to 0 generate start signal
 		wait for baudTime;
 		
 		for i in 0 to 7 loop
-			rx <= not rx;
+			rx <= not rx;			-- set rx to shift between 1 and 0 for 8 bits
 			wait for baudTime;
 		end loop;
 		
-		rx <= '1';
+		rx <= '1';					-- set rx to 1 and waits for to baudTime to generate stop signal
 		wait for baudTime;
 		wait for baudTime;
 		
