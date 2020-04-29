@@ -71,13 +71,3 @@ Architecture behavioral of tb_UART_RX is
 	end process;
 	
 end behavioral;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		
