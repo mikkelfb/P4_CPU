@@ -46,7 +46,6 @@ Architecture behavioral of tb_FIFO is
 			rData	=> rData
 		);
 		
-		reset <= '0';
 		
 		process
 		begin
@@ -60,16 +59,39 @@ Architecture behavioral of tb_FIFO is
 		
 		process
 		begin
+			wr <= '0';
+			rd <= '0';
+			reset <= '1';
+			wait until falling_edge(clk);
+			reset <= '0';
+			wait until falling_edge(clk);
+			
 			wr <= '1';
 			rd <= '0';
 			
-			wait until falling_edge(clk);
+			
+			for i in 0 to 15 loop
+				wData <= testData;
+				testData <= testData + "00000001";
+				wait until falling_edge(clk);
+			end loop;
+			
+			wr <= '0';
+			rd <= '1';
+			
+			for i in 0 to 15 loop
+				wait until falling_edge(clk);
+			end loop;
+			
+			wr <= '1';
+			rd <= '0';
 			
 			for i in 0 to 15 loop
 				testData <= testData + "00000001";
 				wData <= testData;
 				wait until falling_edge(clk);
 			end loop;
+			
 		end process;
 		
 end behavioral;
