@@ -7,17 +7,17 @@ Use IEEE.NUMERIC_STD.all;
 
 entity FIFO is
 	generic (
-		B: natural := 8;	-- Number of bits in buffer
-		W: natural := 4 	-- Number of address bits
+		B: natural := 8;																					-- Number of bits in buffer
+		W: natural := 4 																					-- Number of address bits
 	);
 	
 	port (
-		clk, reset		:	in std_logic;									-- Clock and reset
-		rd					:	in std_logic;									-- Remove data signal. The output of the FIFO is constantly available. This signal makes sure we can delete the data
-		wr					: 	in std_logic;									-- Write data signal
-		wData				:	in std_logic_vector(B-1 downto 0);		-- Data to be written
-		empty, full		:	out std_logic;									-- FIFO empty and full outputs
-		rData				:	out std_logic_vector(B-1 downto 0)		-- Output data
+		clk, reset		:	in std_logic;																-- Clock and reset
+		rd					:	in std_logic;																-- Remove data signal. The output of the FIFO is constantly available. This signal makes sure we can delete the data
+		wr					: 	in std_logic;																-- Write data signal
+		wData				:	in std_logic_vector(B-1 downto 0);									-- Data to be written
+		empty, full		:	out std_logic;																-- FIFO empty and full outputs
+		rData				:	out std_logic_vector(B-1 downto 0)									-- Output data
 	);
 end FIFO;
 	
@@ -48,7 +48,7 @@ begin
 	end process;
 	
 	-- Read Port
-	Rdata <= arrayReg(to_integer(unsigned(rPtrReg)));											-- Set the tail of the queue to the output
+	rData <= arrayReg(to_integer(unsigned(rPtrReg)));											-- Set the tail of the queue to the output
 	
 	wrEn <= wr and (not fullReg); 																	-- Do not write if the FIFO is full 
 	
@@ -77,7 +77,7 @@ begin
 	rPtrSucc <= std_logic_vector(unsigned(rPtrReg) + 1);										-- Set the succesive pointer to contain the address of the next empty register
 	
 	-- Next-state logic for read and write pointers
-	wrOp <= wr & rd;
+	wrOp <= wr & rd;																						-- Concatenates the read and write input for the case statement to use below
 	
 	process (wPtrReg, wPtrSucc, rPtrReg, rPtrSucc, wrOp, emptyReg, fullReg)				
 	begin
@@ -89,18 +89,18 @@ begin
 		when "00" => 																						-- If the operation is 00, then do nothing
 			when "01" => 																					-- If the operation is 01, then do read
 				if (emptyReg /= '1') then 																-- Check if the FIFO is empty
-					rPtrNext <= rPtrSucc;																-- Set the next pointer
-					fullNext <= '0';
-					if (rPtrSucc=wPtrReg) then
-						emptyNext <= '1';																	
+					rPtrNext <= rPtrSucc;																-- Set the next read register pointer
+					fullNext <= '0';																		-- Indicate that the register is now empty
+					if (rPtrSucc=wPtrReg) then															-- If the next read register is equal to the current write register
+						emptyNext <= '1';																	-- Indicate that the next register has nothing to read																	
 					end if;
 				end if;
 			when "10" => 																					-- If the operation is 10, then do write
 				if (fullReg /= '1') then 																-- Check if the FIFO is full
-					wPtrNext <= wPtrSucc;
-					emptyNext <= '0';
-					if (wPtrSucc=rPtrReg) then
-						fullNext <= '1';
+					wPtrNext <= wPtrSucc;																-- Set the next write register pointer
+					emptyNext <= '0';																		-- Indicate that the register is now full
+					if (wPtrSucc=rPtrReg) then															-- Check if the next register is equal to a full read register
+						fullNext <= '1';																	-- Indicate that the register next register is already full
 					end if;
 				end if;
 			when others => 																				-- write/read
