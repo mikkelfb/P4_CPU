@@ -6,7 +6,7 @@ Use IEEE.NUMERIC_STD.all;
 entity dispHexMux is 
 	port(
 			clk, reset: in std_logic;
-			hex5, hex4, hex3, hex2, hex1, hex0: in std_logic_vector(5 downto 0);
+			hex5, hex4, hex3, hex2, hex1, hex0: in std_logic_vector(3 downto 0);
 			dpIn: in std_logic_vector (5 downto 0);
 			ena: in std_logic;
 			an: out std_logic_vector (5 downto 0);
@@ -18,11 +18,11 @@ end dispHexMux ;
 architecture arch of dispHexMux is
 	constant N: integer:= 8; 		--Use 8 for simulations, use 19 on hardware
 	signal qReg, qNext: unsigned (N-1 downto 0):=(others=>'0');
-	signal sel: std_logic_vector (1 downto 0);
+	signal sel: std_logic_vector (2 downto 0);
 	signal hex: std_logic_vector (3 downto 0);
 	signal dp: std_logic;
 begin
-	process (clk, reset)
+	process (clk, reset, ena)
 	begin
 		if reset='1' then
 			qReg <= (others => '0');
