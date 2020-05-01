@@ -10,31 +10,36 @@ architecture behavioural of tb_dispHexMux is
 	component dispHexMux
 		port(
 			clk, reset: in std_logic;
-			hex3, hex2, hex1, hex0: in std_logic_vector(3 downto 0);
-			dpIn: in std_logic_vector (3 downto 0);
+			binIN: in std_logic_vector(15 downto 0);
+			--hex5, hex4, hex3, hex2, hex1, hex0: in std_logic_vector(3 downto 0);
+			dpIn: in std_logic_vector (5 downto 0);
 			ena: in std_logic;
-			an: out std_logic_vector (3 downto 0);
+			an: out std_logic_vector (5 downto 0);
 			sseg : out std_logic_vector ( 7 downto 0)
 			);
 	end component;
 		
 	constant T: time := 20 ns;
 	signal clk, reset: std_logic;
-	signal hex3, hex2, hex1, hex0: std_logic_vector(3 downto 0);
-	signal dpIn: std_logic_vector(3 downto 0);
+	--signal hex5, hex4, hex3, hex2, hex1, hex0: std_logic_vector(3 downto 0);
+	signal binIN: std_logic_vector(15 downto 0);
+	signal dpIn: std_logic_vector(5 downto 0);
 	signal ena: std_logic;
-	signal an: std_logic_vector (3 downto 0);
+	signal an: std_logic_vector (5 downto 0);
 	signal sseg: std_logic_vector (7 downto 0);
 	
 	begin 
 		uut: dispHexMux port map (
 			clk => clk,
 			reset => reset,
-			hex3 => hex3,
-			hex2 => hex2,
-			hex1 => hex1,
-			hex0 => hex0,
+			--hex5 => hex5,
+			--hex4 => hex4,
+			--hex3 => hex3,
+			--hex2 => hex2,
+			--hex1 => hex1,
+			--hex0 => hex0,
 			dpIn => dpIn,
+			binIN => binIN,
 			ena => ena,
 			an => an,
 			sseg => sseg
@@ -52,11 +57,8 @@ architecture behavioural of tb_dispHexMux is
 	begin
 		for i in 0 to 255 loop
 			ena <= '1';
-			hex0 <= "0000";
-			hex1 <= "0001";
-			hex2 <= "0010";
-			hex3 <= "0011";
-			dpIn <= "0000";
+			binIN <= x"4095";
+			dpIn <= "000000";
 			wait until falling_edge(clk);
 		end loop;
 		for i in 0 to 9 loop

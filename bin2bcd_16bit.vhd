@@ -14,7 +14,7 @@ entity bin2bcd_16bit is
 				bcd1 : out  STD_LOGIC_VECTOR(3 downto 0);			--	Output for the second BCD
 				bcd2 : out  STD_LOGIC_VECTOR(3 downto 0);			-- Output for the third BCD
 				bcd3 : out  STD_LOGIC_VECTOR(3 downto 0);			-- Output for the fourth BCD
-				bcd4 :	out  STD_LOGIC_VECTOR(3 downto 0)		-- Output for the fith BCD
+				bcd4 : out  STD_LOGIC_VECTOR(3 downto 0)		-- Output for the fith BCD
           );
 end bin2bcd_16bit;
 
