@@ -33,11 +33,12 @@ begin
 			binary <= binaryNext; --Binary is set to binary next.
 			bcds <= bcdsNext;	--bcds is set to bcds next.
 			state <= stateNext; --state is set to stateNext.
-			bcdsOutReg <= bcdsOutRegNext; --bcdsOutReg is set to bcdsOutRegNext.
+		--	bcdsOutReg <= bcdsOutRegNext; --bcdsOutReg is set to bcdsOutRegNext.
 			shiftCounter <= shiftCounterNext; --Counts up the shiftCounter (shiftCounterNext should at this point be shiftCounter +1)
 		end if;
 	end process;
 	
+	convert:
 	process(state, binary, binaryIn, bcds, bcdsReg, shiftCounter)
 	begin								--start conditions are set.
 		stateNext <= state;
