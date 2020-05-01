@@ -79,7 +79,7 @@ Architecture behavioral of tb_bin2bcd_16bit is
 		wait for clk_period*10;
 
 		-- insert stimulus here 
-		-- should return 4095
+		-- should return 40095
 		binIN <= X"FFFF";
 		wait for clk_period*10;  assert full_number = x"40095" severity error;  -- use "wait for ... ns;"
 
@@ -87,7 +87,7 @@ Architecture behavioral of tb_bin2bcd_16bit is
 		binIN <= X"0000";
 		wait for clk_period*10;  assert full_number = x"00000" severity error;
 
-		-- should return 2748
+		-- should return 27480
 		binIN <= X"ABCD";
 		wait for clk_period*10;  assert full_number = x"27480" severity error;
 		
