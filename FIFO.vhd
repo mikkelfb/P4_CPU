@@ -86,7 +86,7 @@ begin
 		fullNext <= fullReg;
 		emptyNext <= emptyReg;
 		case wrOp is																						-- Case for the different write operations
-		when "00" => 																						-- If the operation is 00, then do nothing
+			when "00" => 																						-- If the operation is 00, then do nothing
 			when "01" => 																					-- If the operation is 01, then do read
 				if (emptyReg /= '1') then 																-- Check if the FIFO is empty
 					rPtrNext <= rPtrSucc;																-- Set the next read register pointer

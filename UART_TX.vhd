@@ -1,4 +1,4 @@
--- This file is heavely inspired by "FPGA PRototyping by VHDL Examples Xilinx Spartan 3"
+-- This file is inspired by "FPGA PRototyping by VHDL Examples Xilinx Spartan 3"
 -- By Pong P. Chu
 -- It is an adobtion from listing 7.3
 
@@ -25,11 +25,11 @@ entity UART_TX is
 	
 	port (
 		clk, reset			: in std_logic;									-- Clock and reset functions.
-		tx_start				: in std_logic;									-- Bit that is received and will be shifted into the register.
-		--sTick			: in std_logic;									-- Enable tick from the baud rate generator.
-		txDoneTick			: out std_logic;									-- Tick for indicating receive is finished. Asserted one clock cycle after the receiving process is completed. 
-		dataIn				: in std_logic_vector(DBIT-1 downto 0);	-- Data register for the received data that will go out on the bus.
-		tx						:	out std_logic
+		tx_start				: in std_logic;									-- Bit that start transimitting
+		sTick					: in std_logic;									-- Enable tick from the baud rate generator.
+		txDoneTick			: out std_logic;									-- Tick for indicating transmitting is finished. Asserted one clock cycle after the receiving process is completed. 
+		dataIn				: in std_logic_vector(DBIT-1 downto 0);	-- Data register for the transmitting data that will go out on the bus.
+		tx						: out std_logic
 	);
 	
 end UART_TX;
@@ -42,12 +42,12 @@ architecture behavioral of UART_TX is
 	signal n_reg, n_next				: unsigned(2 downto 0);
 	signal b_reg, b_next				: std_logic_vector(7 downto 0);
 	signal tx_reg, tx_next			: std_logic;
-	signal sTick						: std_logic;
+	--signal sTick						: std_logic;
 begin
 
 	--Import the baudGenerator entity, should not be there when the combined UART is made
-	baudGenUnit : entity work.baudGenerator(behavioral)
-		port map(clk => clk, reset=>reset, q=> open, maxTick => sTick);
+	--baudGenUnit : entity work.baudGenerator(behavioral)
+	--	port map(clk => clk, reset=>reset, q=> open, maxTick => sTick);
 
 	--FSMD state & data registers
 	process(clk,reset)	begin

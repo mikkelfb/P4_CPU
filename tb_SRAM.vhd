@@ -22,7 +22,8 @@ Architecture behavior of tb_SRAM IS
 	);
 	END COMPONENT;
 	
-	constant T: time := 10 ns;															
+	constant T: time := 10 ns;		
+	constant baudTime: time := 52 us;	
 	
 	signal addr						: STD_LOGIC_VECTOR(6 downto 0);			
 	signal dataInOut				: STD_LOGIC_VECTOR(15 downto 0);		
