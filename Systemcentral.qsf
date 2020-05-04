@@ -59,8 +59,6 @@ set_global_assignment -name VHDL_FILE UART_TX.vhd
 set_global_assignment -name VHDL_FILE tb_Instruction_Decoder.vhd
 set_global_assignment -name VHDL_FILE Instruction_Decoder.vhd
 set_global_assignment -name VHDL_FILE tb_UART_TX.vhd
-set_global_assignment -name VHDL_FILE tb_Branching_Control.vhd
-set_global_assignment -name VHDL_FILE Branching_Control.vhd
 set_global_assignment -name VHDL_FILE bcdconverter.vhd
 set_global_assignment -name VHDL_FILE baudGenerator.vhd
 set_global_assignment -name VHDL_FILE ALU.vhd

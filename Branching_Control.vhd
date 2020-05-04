@@ -7,11 +7,11 @@ Entity Branching_Control is
 	port(
 			CarryFlag 				: in STD_LOGIC;
 			ZeroFlag 				: in STD_LOGIC;
-			EN							: in STD_LOGIC;
-			EN_Latch					: in STD_LOGIC;
-			PC_Control 				: out STD_LOGIC
+			En							: in STD_LOGIC;
+			EnLatch					: in STD_LOGIC;
+			PCControl 				: out STD_LOGIC
 	);
-end Branching_Control;
+End Branching_Control;
 
 
 architecture Behavioral of Branching_Control is 
@@ -19,13 +19,13 @@ signal Last_ZF: STD_LOGIC;
 signal Last_CF: STD_LOGIC;
 
 begin 
-process(EN, CarryFlag, ZeroFlag)
+process(En, CarryFlag, ZeroFlag)
 	begin 
-		if(EN = '1' AND EN_Latch = '1') then 
+		if(En = '1' AND EnLatch = '1') thEn 
 			Last_ZF <= ZeroFlag;
 			Last_CF <= CarryFlag;
-		end if;
-end process;
+		End if;
+End process;
 
-PC_Control <= Last_ZF WHEN EN = '1' ELSE 'Z';
-end Behavioral; 
+PCControl <= Last_ZF WHEn En = '1' ELSE 'Z';
+End Behavioral; 

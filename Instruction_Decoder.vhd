@@ -6,160 +6,160 @@ Use IEEE.NUMERIC_STD.all;
 
 Entity Instruction_Decoder is 
 	port(
-			Instruction_Code 			: in STD_LOGIC_VECTOR(14 downto 0);
+			instructionCode 			: in STD_LOGIC_VECTOR(14 downto 0);
 			clk 							: in STD_LOGIC;
-			EN_ID							: in STD_LOGIC;
-			En_Wr							: in STD_LOGIC;
-			SRAM_Addr					: out STD_LOGIC_VECTOR(6 downto 0);
-			Op_Code						: out STD_LOGIC_VECTOR(4 DOWNTO 0);
-			Reg_Addr_A					: out STD_LOGIC_VECTOR(2 downto 0);
-			Reg_Addr_B					: out STD_LOGIC_VECTOR(2 downto 0);
-			Reg_Addr_C					: out STD_LOGIC_VECTOR(2 downto 0);
-			PC_Addr						: out STD_LOGIC_VECTOR(6 downto 0)
+			EnID							: in STD_LOGIC;
+			EnWr							: in STD_LOGIC;
+			addrSRAM						: out STD_LOGIC_VECTOR(6 downto 0);
+			opCode						: out STD_LOGIC_VECTOR(4 DOWNTO 0);
+			addrRegA						: out STD_LOGIC_VECTOR(2 downto 0);
+			addrRegB						: out STD_LOGIC_VECTOR(2 downto 0);
+			addrRegC						: out STD_LOGIC_VECTOR(2 downto 0);
+			addrPC						: out STD_LOGIC_VECTOR(6 downto 0)
 	);
 end Instruction_Decoder;
 			
 			
 architecture Behavioral of Instruction_Decoder is
-signal Opcode_Intern: STD_LOGIC_VECTOR(4 downto 0);
-signal Current_Instruction: STD_LOGIC_VECTOR(14 downto 0);
+signal opCodeIntern: STD_LOGIC_VECTOR(4 downto 0);
+signal currentInstruction: STD_LOGIC_VECTOR(14 downto 0);
 
 begin 
-Opcode_Intern <= Current_Instruction(4 downto 0);
-process(Opcode_Intern, Current_Instruction, EN_ID)
+opCodeIntern <= currentInstruction(4 downto 0);
+process(opCodeIntern, currentInstruction, EnID)
 	begin
-		if(EN_ID = '1') then
-			case Opcode_Intern is
+		if(EnID = '1') then
+			case opCodeIntern is
 				when "00001" => 
-					Reg_Addr_C <= Current_Instruction(7 downto 5);
-					SRAM_Addr <= Current_Instruction(14 downto 8);
-					Reg_Addr_A <= "ZZZ";
-					Reg_Addr_B <= "ZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegC <= currentInstruction(7 downto 5);
+					addrSRAM <= currentInstruction(14 downto 8);
+					addrRegA <= "ZZZ";
+					addrRegB <= "ZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "00010" =>
-					Reg_Addr_A <= Current_Instruction(7 Downto 5);
-					SRAM_Addr <= Current_Instruction(14 downto 8);
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 Downto 5);
+					addrSRAM <= currentInstruction(14 downto 8);
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "00011" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				When "00100" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "00101" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "00110" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "00111" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "01000" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "01001" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "01010" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "01011" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					Reg_Addr_B <= Current_Instruction(10 downto 8);
-					Reg_Addr_C <= Current_Instruction(14 downto 12);
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrRegB <= currentInstruction(10 downto 8);
+					addrRegC <= currentInstruction(14 downto 12);
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 				when "01100" =>
-					PC_Addr <= Current_Instruction(14 downto 8);
-					Reg_Addr_A <= "ZZZ";
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";	
-					SRAM_Addr <= "ZZZZZZZ";
+					addrPC <= currentInstruction(14 downto 8);
+					addrRegA <= "ZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrSRAM <= "ZZZZZZZ";
 				when "01101" =>
-					Reg_Addr_C <= Current_Instruction(7 downto 5);
-					SRAM_Addr <= "ZZZZZZZ";
-					Reg_Addr_A <= "ZZZ";
-					Reg_Addr_B <= "ZZZ";	
-					PC_Addr <= "ZZZZZZZ";
+					addrRegC <= currentInstruction(7 downto 5);
+					addrSRAM <= "ZZZZZZZ";
+					addrRegA <= "ZZZ";
+					addrRegB <= "ZZZ";	
+					addrPC <= "ZZZZZZZ";
 				when "01110" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					SRAM_Addr <= "ZZZZZZZ";
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";	
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrSRAM <= "ZZZZZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrPC <= "ZZZZZZZ";
 				when "01111" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					SRAM_Addr <= "ZZZZZZZ";
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";	
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrSRAM <= "ZZZZZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrPC <= "ZZZZZZZ";
 				when "10000" =>
-					Reg_Addr_A <= Current_Instruction(7 downto 5);
-					SRAM_Addr <= "ZZZZZZZ";
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";	
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= currentInstruction(7 downto 5);
+					addrSRAM <= "ZZZZZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrPC <= "ZZZZZZZ";
 				when "10001" =>
-					PC_Addr <= Current_Instruction(14 downto 8);
-					Reg_Addr_A <= "ZZZ";
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";	
-					SRAM_Addr <= "ZZZZZZZ";
+					addrPC <= currentInstruction(14 downto 8);
+					addrRegA <= "ZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrSRAM <= "ZZZZZZZ";
 				when others =>
-					Reg_Addr_A <= "ZZZ";
-					Reg_Addr_B <= "ZZZ";
-					Reg_Addr_C <= "ZZZ";	
-					SRAM_Addr <= "ZZZZZZZ";
-					PC_Addr <= "ZZZZZZZ";
+					addrRegA <= "ZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrSRAM <= "ZZZZZZZ";
+					addrPC <= "ZZZZZZZ";
 			end case;
 		else  	
-			Reg_Addr_A <= "ZZZ";
-			Reg_Addr_B <= "ZZZ";
-			Reg_Addr_C <= "ZZZ";	
-			SRAM_Addr <= "ZZZZZZZ";
-			PC_Addr <= "ZZZZZZZ";
+			addrRegA <= "ZZZ";
+			addrRegB <= "ZZZ";
+			addrRegC <= "ZZZ";	
+			addrSRAM <= "ZZZZZZZ";
+			addrPC <= "ZZZZZZZ";
 		end if;
 end process;
 
-process (clk, En_Wr)
+process (clk, EnWr)
 	begin
 		if(Rising_edge(clk)) then 
-			if(En_Wr ='1') then
-			Current_Instruction <= Instruction_Code;
+			if(EnWr ='1') then
+			currentInstruction <= instructionCode;
 			end if;
 		end if;
 end process;
 				
 
 
-Op_Code <= Current_Instruction(4 downto 0) when EN_ID ='1' else (others => 'Z');		
+opCode <= currentInstruction(4 downto 0) when EnID ='1' else (others => 'Z');		
 				
 
 end Behavioral; 

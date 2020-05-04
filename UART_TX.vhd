@@ -25,7 +25,7 @@ entity UART_TX is
 	
 	port (
 		clk, reset			: in std_logic;									-- Clock and reset functions.
-		tx_start				: in std_logic;									-- Bit that start transimitting
+		txStart				: in std_logic;									-- Bit that start transimitting
 		sTick					: in std_logic;									-- Enable tick from the baud rate generator.
 		txDoneTick			: out std_logic;									-- Tick for indicating transmitting is finished. Asserted one clock cycle after the receiving process is completed. 
 		dataIn				: in std_logic_vector(DBIT-1 downto 0);	-- Data register for the transmitting data that will go out on the bus.
@@ -35,13 +35,13 @@ entity UART_TX is
 end UART_TX;
 
 architecture behavioral of UART_TX is
-	type state_type is (idle, start, data, stop);
-	signal state_reg, state_next 	: state_type;
+	type stateType is (idle, start, data, stop);
+	signal stateReg, stateNext 	: stateType;
 
-	signal s_reg, s_next 			: unsigned(3 downto 0);
-	signal n_reg, n_next				: unsigned(2 downto 0);
-	signal b_reg, b_next				: std_logic_vector(7 downto 0);
-	signal tx_reg, tx_next			: std_logic;
+	signal sReg, sNext 				: unsigned(3 downto 0);
+	signal nReg, nNext				: unsigned(2 downto 0);
+	signal bReg, bNext				: std_logic_vector(7 downto 0);
+	signal txReg, txNext				: std_logic;
 	--signal sTick						: std_logic;
 begin
 
@@ -52,78 +52,78 @@ begin
 	--FSMD state & data registers
 	process(clk,reset)	begin
 		if reset='1' then
-			state_reg 	<= idle;
-			s_reg 		<= (others=>'0');
-			n_reg			<= (others=>'0');
-			b_reg			<= (others=>'0');
-			tx_reg 		<= '1';
+			stateReg 	<= idle;
+			sReg 		<= (others=>'0');
+			nReg			<= (others=>'0');
+			bReg			<= (others=>'0');
+			txReg 		<= '1';
 		elsif (clk'event and clk='1') then
-			state_reg 	<= state_next;
-			s_reg 		<= s_next;
-			n_reg 		<= n_next;
-			b_reg 		<= b_next;
-			tx_reg 		<= tx_next;
+			stateReg 	<= stateNext;
+			sReg 		<= sNext;
+			nReg 		<= nNext;
+			bReg 		<= bNext;
+			txReg 		<= txNext;
 		end if;
 	end process;
 
 	-- next-state logic
-	process(state_reg, s_reg, n_reg, b_reg, sTick, tx_reg, tx_start, dataIn)
+	process(stateReg, sReg, nReg, bReg, sTick, txReg, txStart, dataIn)
 	begin
 		-- Sets next state for registers
-		state_next 		<= state_reg; 
-		s_next 			<= s_reg;
-		n_next 			<= n_reg;
-		b_next 			<= b_reg;
-		tx_next 			<= tx_reg;
+		stateNext 		<= stateReg; 
+		sNext 			<= sReg;
+		nNext 			<= nReg;
+		bNext 			<= bReg;
+		txNext 			<= txReg;
 		txDoneTick 	<= '0';
 		
-		case state_reg is 									--case switches the state
+		case stateReg is 									--case switches the state
 			when idle => 										--When the state is idle
-				tx_next <= '1';								--Set tx to 1 as there is no signal to send in idle state
-				if tx_start = '1' then						--If tx_start (start new transmission) is set high
-					state_next <= start;						--Set state to start
-					s_next <= (others=>'0');				
-					b_next <= dataIn;							--set "sending" bit register to dataIn
+				txNext <= '1';								--Set tx to 1 as there is no signal to send in idle state
+				if txStart = '1' then						--If txStart (start new transmission) is set high
+					stateNext <= start;						--Set state to start
+					sNext <= (others=>'0');				
+					bNext <= dataIn;							--set "sending" bit register to dataIn
 				end if;
 			when start =>										--When the state is start
-				tx_next <= '0';								--Set tx to 0 as the start signal is a 0 "bit" frame
+				txNext <= '0';								--Set tx to 0 as the start signal is a 0 "bit" frame
 				if(sTick = '1') then							--Test if there is a sTick signal
-					if s_reg = 15 then						--If there have been 15 sTick signales the Start signal 0 is done
-						state_next <= data;					--Set next state to data state
-						s_next <= (others=> '0');
-						n_next <= (others=> '0');
+					if sReg = 15 then						--If there have been 15 sTick signales the Start signal 0 is done
+						stateNext <= data;					--Set next state to data state
+						sNext <= (others=> '0');
+						nNext <= (others=> '0');
 					else
-						s_next <= s_reg + 1;					--Count s_reg up until 15 sTick signal have been recieved
+						sNext <= sReg + 1;					--Count sReg up until 15 sTick signal have been recieved
 					end if;
 				end if;
 			when data =>										--When the state is data
-				tx_next <= b_reg(0);							--Sets the tx to be the first bit in the b_reg (sending byte register)
+				txNext <= bReg(0);							--Sets the tx to be the first bit in the bReg (sending byte register)
 				if (sTick = '1') then						--Test if there is a sTick signal
-					if (s_reg = 15) then						--If there have been 15 sTick signales 1 bit have been transmitted
-						s_next <= (others=>'0');			-- set sTick to 0
-						b_next <= '0' & b_reg(7 downto 1); --concatinate '0' with the 7 downto 1 bit in B_reg -> eg. if b_reg is (11101110) then the b_nex will be ("0"1110111)
-						if (n_reg = (DBIT-1)) then				--Test if all bits have been transmitted
-							state_next <= stop;				--sets next state to stop
+					if (sReg = 15) then						--If there have been 15 sTick signales 1 bit have been transmitted
+						sNext <= (others=>'0');			-- set sTick to 0
+						bNext <= '0' & bReg(7 downto 1); --concatinate '0' with the 7 downto 1 bit in bReg -> eg. if bReg is (11101110) then the b_nex will be ("0"1110111)
+						if (nReg = (DBIT-1)) then				--Test if all bits have been transmitted
+							stateNext <= stop;				--sets next state to stop
 						else
-							n_next <= n_reg+1;				--Increase the n_reg by one
+							nNext <= nReg+1;				--Increase the nReg by one
 						end if;
 					else
-						s_next <= s_reg+1;					--Count s_reg up until 15 sTick signal have been recieved
+						sNext <= sReg+1;					--Count sReg up until 15 sTick signal have been recieved
 					end if;
 				end if;
 			when stop =>										--When the state is stop
-				tx_next <= '1';								--Set the tx to 1 to generate stop signal
+				txNext <= '1';								--Set the tx to 1 to generate stop signal
 				if (sTick = '1') then						--Test if there is a sTick signal
-					if s_reg = (SB_TICK-1) then			--Test if there have been enough sTick signals for the stop signal
-						state_next <= idle;					--Sets next state to idle
+					if sReg = (SB_TICK-1) then			--Test if there have been enough sTick signals for the stop signal
+						stateNext <= idle;					--Sets next state to idle
 						txDoneTick <= '1';					--Sets done tick high
 					else
-						s_next <= s_reg + 1;
+						sNext <= sReg + 1;
 					end if;
 				end if;
-			end case;
-		end process;
-		tx <= tx_reg;
+		end case;
+	end process;
+	tx <= txReg;
 	
 end behavioral;	
 	
