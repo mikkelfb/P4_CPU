@@ -11,7 +11,7 @@ architecture behavioural of tb_dispHexMux is
 		port(
 			clk, reset: in std_logic;
 			binIN: in std_logic_vector(15 downto 0);
-			--hex5, hex4, hex3, hex2, hex1, hex0: in std_logic_vector(3 downto 0);
+			en: in std_logic;
 			dpIn: in std_logic_vector (5 downto 0);
 			an: out std_logic_vector (5 downto 0);
 			sseg : out std_logic_vector ( 7 downto 0)
@@ -31,15 +31,10 @@ architecture behavioural of tb_dispHexMux is
 		uut: dispHexMux port map (
 			clk => clk,
 			reset => reset,
-			--hex5 => hex5,
-			--hex4 => hex4,
-			--hex3 => hex3,
-			--hex2 => hex2,
-			--hex1 => hex1,
-			--hex0 => hex0,
 			dpIn => dpIn,
 			binIN => binIN,
 			an => an,
+			en => en,
 			sseg => sseg
 		);
 		
@@ -53,10 +48,23 @@ architecture behavioural of tb_dispHexMux is
 	
 	process
 	begin
+		en <= '1';
+		binIN <= x"FFFF";
+		dpIn <= "000000";
+		wait until falling_edge(clk);
 		for i in 0 to 255 loop
-			binIN <= x"FFFF";
-			dpIn <= "000000";
 			wait until falling_edge(clk);
 		end loop;
+		
+		en <= '0';
+		
+		wait until falling_edge(clk);
+		
+		binIn <= x"1001";
+		
+		for i in 0 to 9 loop
+			wait until falling_edge(clk);
+		end loop;
+		
 	end process;
 end behavioural;
