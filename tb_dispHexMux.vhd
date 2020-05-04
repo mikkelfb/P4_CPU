@@ -13,7 +13,6 @@ architecture behavioural of tb_dispHexMux is
 			binIN: in std_logic_vector(15 downto 0);
 			--hex5, hex4, hex3, hex2, hex1, hex0: in std_logic_vector(3 downto 0);
 			dpIn: in std_logic_vector (5 downto 0);
-			ena: in std_logic;
 			an: out std_logic_vector (5 downto 0);
 			sseg : out std_logic_vector ( 7 downto 0)
 			);
@@ -21,10 +20,10 @@ architecture behavioural of tb_dispHexMux is
 		
 	constant T: time := 20 ns;
 	signal clk, reset: std_logic;
-	--signal hex5, hex4, hex3, hex2, hex1, hex0: std_logic_vector(3 downto 0);
+	signal hex5, hex4, hex3, hex2, hex1, hex0: std_logic_vector(3 downto 0);
 	signal binIN: std_logic_vector(15 downto 0);
 	signal dpIn: std_logic_vector(5 downto 0);
-	signal ena: std_logic;
+	signal en: std_logic;
 	signal an: std_logic_vector (5 downto 0);
 	signal sseg: std_logic_vector (7 downto 0);
 	
@@ -40,7 +39,6 @@ architecture behavioural of tb_dispHexMux is
 			--hex0 => hex0,
 			dpIn => dpIn,
 			binIN => binIN,
-			ena => ena,
 			an => an,
 			sseg => sseg
 		);
@@ -56,13 +54,8 @@ architecture behavioural of tb_dispHexMux is
 	process
 	begin
 		for i in 0 to 255 loop
-			ena <= '1';
-			binIN <= x"4095";
+			binIN <= x"FFFF";
 			dpIn <= "000000";
-			wait until falling_edge(clk);
-		end loop;
-		for i in 0 to 9 loop
-			ena <= '0';
 			wait until falling_edge(clk);
 		end loop;
 	end process;

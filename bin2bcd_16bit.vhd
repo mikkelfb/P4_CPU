@@ -23,15 +23,16 @@ architecture Behavioral of bin2bcd_16bit is
 begin
 
 	process(binIN)
-
+		
 		-- temporary variable
 		variable temp : STD_LOGIC_VECTOR (15 downto 0);
 	  
 		
 		variable bcd : UNSIGNED(19 downto 0) := (others => '0');
 
-	  
+		  
 		begin
+			
 			-- zero the bcd variable
 			bcd := (others => '0');
 		 
@@ -72,7 +73,8 @@ begin
 		bcd2 <= STD_LOGIC_VECTOR(bcd(11 downto 8));
 		bcd3 <= STD_LOGIC_VECTOR(bcd(15 downto 12));
 		bcd4 <= STD_LOGIC_VECTOR(bcd(19 downto 16));
+
 	  
-		end process;            
+	end process;            
   
 end Behavioral;

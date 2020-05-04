@@ -7,7 +7,6 @@ entity dispHexMux is
 	port(
 			clk, reset: in std_logic;
 			dpIn: in std_logic_vector (5 downto 0);
-			ena: in std_logic;
 			binIN: in std_logic_vector(15 downto 0);
 			an: out std_logic_vector (5 downto 0);
 			sseg : out std_logic_vector ( 7 downto 0)
@@ -25,15 +24,15 @@ architecture arch of dispHexMux is
 begin
 
 	bIn2BCD : entity work.bin2bcd_16bit(behavioral)
-	port map(bcd0 => hex0, bcd1 => hex1, bcd2 => hex2, bcd3 => hex3, bcd4 => hex4, binIN => binIN);
+	port map(bcd0 => hex0, bcd1 => hex1, bcd2 => hex2, bcd3 => hex3, bcd4 => hex4, binIN => binIn);
 
-	process (clk, reset, ena)
+	process (clk, reset)
 	begin
 		if reset='1' then
 			qReg <= (others => '0');
-			elsif (rising_edge(clk) and ena='1') then
-				qReg <= qNext;
-			end if;
+		elsif (rising_edge(clk)) then
+			qReg <= qNext;
+		end if;
 	end process;
 	
 	qNext <= qReg +1;
