@@ -40,6 +40,8 @@ begin
 	begin
 		if (reset = '1') then
 			rReg <= (others => '0');
+		elsif (load = '1') then
+			rReg <= unsigned(branchIn);
 		elsif (rising_edge(clk)) then
 			rReg <= rNext;
 		end if;
@@ -48,7 +50,7 @@ begin
 	
 	-- next-state logic
 	rNext <= (others => '0') 		when synClr = '1' 			else
-				unsigned(branchIn)	when load = '1' 				else
+				--unsigned(branchIn)	when load = '1' 				else
 				rReg + 1					when enPc = '1'  				else
 				rReg;
 				

@@ -21,7 +21,7 @@ signal Last_CF: STD_LOGIC;
 begin 
 process(En, CarryFlag, ZeroFlag)
 	begin 
-		if(En = '1' AND EnLatch = '1') thEn 
+		if(EnLatch = '1') thEn 
 			Last_ZF <= ZeroFlag;
 			Last_CF <= CarryFlag;
 		End if;

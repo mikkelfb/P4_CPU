@@ -16,13 +16,14 @@ end dispHexMux ;
 
 
 architecture arch of dispHexMux is
-	constant N: integer:= 8; 		--Use 8 for simulations, use 19 on hardware
-	signal qReg, qNext: unsigned (N-1 downto 0):=(others=>'0');
-	signal sel: std_logic_vector (2 downto 0);
-	signal hex4, hex3, hex2, hex1, hex0: std_logic_vector(3 downto 0);
-	signal hex: std_logic_vector (3 downto 0);
-	signal dp: std_logic;
-	signal reg: std_logic_vector(15 downto 0);
+	constant N										: integer:= 8; 		--Use 8 for simulations, use 19 on hardware
+	signal qReg, qNext							: unsigned (N-1 downto 0):=(others=>'0');
+	signal sel										: std_logic_vector (2 downto 0);
+	signal hex4, hex3, hex2, hex1, hex0		: std_logic_vector(3 downto 0);
+	signal hex										: std_logic_vector (3 downto 0);
+	signal dp										: std_logic;
+	signal reg										: std_logic_vector(15 downto 0);
+	
 begin
 
 	bIn2BCD : entity work.bin2bcd_16bit(behavioral)
