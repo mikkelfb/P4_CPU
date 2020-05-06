@@ -2,6 +2,7 @@ library IEEE;
 Use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 Use IEEE.NUMERIC_STD.all;
+use std.textio.all;
 
 entity SRAM is
 	generic (
@@ -28,17 +29,18 @@ architecture Behavioral of SRAM is
 	
 	
 	
-	--attribute ram_init_file : string;
-	--attribute ram_init_file of arrayReg : signal is "my_init_file.hex";
+	-- The function below takes a file called program.txt and reads it line by line. Then outputs the new vector with the program in it. 
 	
-	
-	function initSram
-		return SRAM_type is 
-		variable tmp : SRAM_type := (others => (others => '0'));
-	begin 
-		for addr_pos in 0 to 2**W - 1 loop 
-			-- Initialize each address with the address itself
-			tmp(addr_pos) := std_logic_vector(to_unsigned(addr_pos, B));
+	impure function initSRAM return SRAM_type is
+		file textFile: text open read_mode is "..\..\program.txt";
+		variable textLine: line;
+		variable ramContent: SRAM_type;
+		variable bv : bit_vector(ramContent(0)'range);
+	begin
+		for i in 0 to 2**W-1 loop
+			readline(textFile, textLine);
+			read(textLine, bv);
+			ramContent(i) := to_stdlogicvector(bv);
 		end loop;
 		
 		tmp(0)	:= "0000000000000000"; -- NOP
@@ -72,11 +74,13 @@ architecture Behavioral of SRAM is
 --		tmp(51) 	:= "0000000100101100";
 		return tmp;
 	end initSram;	 
+		return ramContent;
+	end function;
 
 	-- Declare the RAM signal and specify a default value.	Quartus Prime
 	-- will create a memory initialization file (.mif) based on the 
 	-- default value.
-	signal arrayReg			: SRAM_type :=initSram;				-- Create a signal that enables references to the SRAM addresses
+	signal arrayReg			: SRAM_type := initSRAM;				-- Create a signal that enables references to the SRAM addresses
 	
 	
 	
