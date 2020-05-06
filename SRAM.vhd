@@ -32,7 +32,7 @@ architecture Behavioral of SRAM is
 	-- The function below takes a file called program.txt and reads it line by line. Then outputs the new vector with the program in it. 
 	
 	impure function initSRAM return SRAM_type is
-		file textFile: text open read_mode is "C:\Users\mabo\Documents\AAU_EIT\4-semester\P4_CPU\program.txt";
+		file textFile: text open read_mode is "..\..\program.txt";
 		variable textLine: line;
 		variable ramContent: SRAM_type;
 		variable bv : bit_vector(ramContent(0)'range);
