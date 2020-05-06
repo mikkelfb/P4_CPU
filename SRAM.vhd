@@ -40,19 +40,36 @@ architecture Behavioral of SRAM is
 			-- Initialize each address with the address itself
 			tmp(addr_pos) := std_logic_vector(to_unsigned(addr_pos, B));
 		end loop;
-		tmp(0) := "0000000000000000";
-		tmp(1) := "0011001000100001";
-		tmp(2) := "0011001101000001";
-		tmp(3) := "0011000101001000";
-		tmp(4) := "0100000101001001";
-		tmp(5) := "0000000000101111";
-		tmp(6) := "0011001011000001"; --LOAD GPR addr 6 with 45
-		tmp(7) := "0011001011100001"; --LOAD GPR addr 7 with 45
-		tmp(8) := "0101011111000100"; -- Evaluate addr 7 < 6
-		tmp(9) := "0000000000010001"; --HOPC to line 0.
-	
-		tmp(50) 	:= "0000000000101101";
-		tmp(51) 	:= "0000000100101100";
+		
+		tmp(0)	:= "0000000000000000"; -- NOP
+		tmp(1)	:= "0000010000010010"; -- Hop to line 4 if RX buffer is empty
+		tmp(2)	:= "0000000000001101"; -- UAS read from UART RX buffer and but it into GPR addr 000
+		tmp(3)	:= "0100000000000010"; --SKR write GPR addr 0 into SRAM addr 1000 000
+		tmp(4)	:= "0000000000000000"; -- NOP
+		tmp(5) 	:= "0000000000001100"; -- HOP to line 0
+		
+		--TX test
+--		tmp(0)	:= "0000000000000000";
+--		tmp(1)	:= "0011001000000001"; --Load SRAM addr 50 into GPR addr 0
+--		tmp(2)	:= "0000000000001110"; --UAS GPR addr 0 into UART
+--		tmp(3)	:= "0000000000000000"; --NOP do nothing
+--		tmp(4)	:= "0000001100001100"; --HOP to line 3
+--		tmp(50) 	:= x"F00F";
+
+		--OPCODE test med HOPC
+--		tmp(0) := "0000000000000000";
+--		tmp(1) := "0011001000100001";
+--		tmp(2) := "0011001101000001";
+--		tmp(3) := "0011000101001000";
+--		tmp(4) := "0100000101001001";
+--		tmp(5) := "0000000000101111";
+--		tmp(6) := "0011001011000001"; --LOAD GPR addr 6 with 45
+--		tmp(7) := "0011001011100001"; --LOAD GPR addr 7 with 45
+--		tmp(8) := "0101011111000100"; -- Evaluate addr 7 < 6
+--		tmp(9) := "0000000000010001"; --HOPC to line 0.
+--	
+--		tmp(50) 	:= "0000000000101101";
+--		tmp(51) 	:= "0000000100101100";
 		return tmp;
 	end initSram;	 
 

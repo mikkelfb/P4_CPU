@@ -132,6 +132,12 @@ process(opCodeIntern, currentInstruction, EnID)
 					addrRegB <= "ZZZ";
 					addrRegC <= "ZZZ";	
 					addrSRAM <= "ZZZZZZZ";
+				when "10010" =>
+					addrPC <= currentInstruction(14 downto 8);
+					addrRegA <= "ZZZ";
+					addrRegB <= "ZZZ";
+					addrRegC <= "ZZZ";	
+					addrSRAM <= "ZZZZZZZ";
 				when others =>
 					addrRegA <= "ZZZ";
 					addrRegB <= "ZZZ";

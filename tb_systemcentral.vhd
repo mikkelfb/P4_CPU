@@ -11,25 +11,58 @@ Architecture behavior of tb_Systemcentral IS
 	COMPONENT Systemcentral
 	port(
 		clk	: in std_logic;
-		reset : in std_logic
+		reset : in std_logic;
+		UARTRX : in std_logic;
+		UARTTX : out std_logic
 	);
 	end component;
 	
 	constant T: time := 20 ns;		
+	constant baudTime: time := 52 us;								-- Used to simulate unput, set for a baudrate at 19200
 	
 	signal clk : std_logic;
-	signal reset : std_logic:='0';
+	signal reset : std_logic:='1';
+	
+	signal UARTRX : std_logic:='1';
+	signal UARTTX : std_logic:='1';
+	
+	
 begin
 	uut : Systemcentral port map(
 		clk => clk,
-		reset => reset	);
-
-
+		reset => reset,
+		UARTRX => UARTRX,
+		UARTTX => UARTTX);
+	
+	--clk process
 	process
 		begin
 			clk <= '0';
 			wait for T/2;
 			clk <= '1';
 			wait for T/2;
-		end process;
+			if(reset = '1') then
+				reset <= '0';
+			end if;
+	end process;
+	
+	process
+		begin
+			wait until falling_edge(clk);
+			wait until falling_edge(clk);
+			--start incomming UART message
+			UARTRX <= '0';					-- Sets rx to 0 generate start signal
+			wait for baudTime;
+			
+			for i in 0 to 7 loop
+				UARTRX <= not UARTRX;			-- set rx to shift between 1 and 0 for 8 bits
+				wait for baudTime;
+			end loop;
+			
+			UARTRX <= '1';					-- set rx to 1 and waits for to baudTime to generate stop signal
+			wait for baudTime;
+			wait for baudTime;
+	end process;
+	
+	
 end behavior;

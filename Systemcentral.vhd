@@ -5,9 +5,12 @@ USE IEEE.NUMERIC_STD.ALL;
 entity systemcentral is 
 	port(
 		clk	: in std_logic;
-		reset : in std_logic
+		reset : in std_logic;
 		
 		--WE should make port connections for UART and screen here
+		--Uart connections
+		UARTRX : in std_logic;
+		UARTTX : out std_logic
 	);
 end systemcentral;
 
@@ -24,13 +27,21 @@ Architecture behavioral of systemcentral is
 	signal SRAMEnInstr, SRAMEn, SRAMEnWr			: std_logic;
 	signal EnPC												: std_logic;
 	signal BranchEn, BranchEnLatch					: std_logic;
+	signal BranchUartEn									: std_logic;
 	signal IDEn, IDEnWr									: std_logic;
 	signal GPREnWr											: std_logic;
 	signal EnALU											: std_logic;
 	signal EnSSEG											: std_logic;
 	
 	signal loadPC											: std_logic;
+	signal rxEmpty											: std_logic;
 	
+	
+	signal UARTEnREAD										: std_logic;
+	signal UARTEnRemoveRxBuf							: std_logic;
+	signal UARTEnWrite									: std_logic;
+	
+	signal debugState										: std_logic_vector(1 downto 0);
 	
 	--address lines
 	signal addrRegA										: std_logic_vector(2 downto 0);
@@ -62,9 +73,11 @@ begin
 	CUUnit : entity work.CU(behavioral)
 		port map(	clk => clk , reset=> reset , opCode =>opCode ,
 						SRAMEnInstr => SRAMEnInstr , SRAMEn => SRAMEn , SRAMEnWr => SRAMEnWr,
-						EnPC => EnPC , BranchEn => BranchEn , BranchEnLatch => BranchEnLatch,
+						EnPC => EnPC , BranchEn => BranchEn , BranchEnLatch => BranchEnLatch, BranchUartEn => BranchUartEn,
 						IDEn => IDEn , IDEnWr => IDEnWr , GPREnWr => GPREnWr , 
-						EnALU => EnALU , EnSSEG => EnSSEG);
+						EnALU => EnALU , EnSSEG => EnSSEG, PCLoadEn => loadPC ,
+						UARTEnREAD => UARTEnREAD , UARTEnWrite => UARTEnWrite , UARTEnRemoveRxBuf => UARTEnRemoveRxBuf ,
+						state=> debugState);
 
 	--Instruction decoder
 	IDunit : entity work.Instruction_Decoder(Behavioral)
@@ -107,14 +120,25 @@ begin
 	--Branching control
 	BranchingControlUnit : entity work.Branching_Control(Behavioral)
 		port map(	CarryFlag => carryFlag , ZeroFlag => zeroFlag,
-						En => BranchEn , EnLatch => BranchEnLatch ,
-						PCControl => loadPC);
+						En => BranchEn , EnLatchALU => BranchEnLatch ,
+						PCControl => loadPC , EnUart => BranchUartEn ,UartBranch => rxEmpty);
+	
+	--UART
+	UARTUnit : entity work.UART(behavioral)
+		port map(	clk => clk , reset => reset ,
+						rx => UARTRX , tx => UARTTX , remDataRxBuf => UARTEnRemoveRxBuf ,
+						rdUart => UARTEnREAD , wrUart => UARTEnWrite , dataInOut => dataLine , rxEmpty => rxEmpty);
 	
 end behavioral;
 
-
-
-
+--	clk, reset				: 	in std_logic;
+--	rx							: 	in std_logic; -- Port for rx connector
+--	tx							: 	out std_logic; --Port for tx connector
+--	remDataRxBuf			: 	in std_logic; 
+--	rdUart					: 	in std_logic;
+--	wrUart					:	in std_Logic; --Set if we wnt to read or write from UART module 
+--	txFull, rxEmpty		: 	out std_logic; --Set according to FIFO bufferes
+--	dataInOut				: 	inout std_logic_vector(15 downto 0)
 
 --	CarryFlag 				: in STD_LOGIC;
 --	ZeroFlag 				: in STD_LOGIC;

@@ -8,8 +8,10 @@ Entity Branching_Control is
 			CarryFlag 				: in STD_LOGIC;
 			ZeroFlag 				: in STD_LOGIC;
 			En							: in STD_LOGIC;
-			EnLatch					: in STD_LOGIC;
-			PCControl 				: out STD_LOGIC
+			EnLatchALU				: in STD_LOGIC;
+			EnUart					: in std_logic;
+			PCControl 				: out STD_LOGIC;
+			UartBranch				: in std_logic
 	);
 End Branching_Control;
 
@@ -19,13 +21,15 @@ signal Last_ZF: STD_LOGIC;
 signal Last_CF: STD_LOGIC;
 
 begin 
-process(En, CarryFlag, ZeroFlag)
+process(EnLatchALU, En, CarryFlag, ZeroFlag)
 	begin 
-		if(EnLatch = '1') thEn 
+		if(EnLatchALU = '1') then 
 			Last_ZF <= ZeroFlag;
 			Last_CF <= CarryFlag;
 		End if;
 End process;
 
-PCControl <= Last_ZF WHEn En = '1' ELSE 'Z';
+PCControl <= 	Last_ZF When (En = '1' and EnUart = '0') else
+					UartBranch when (EnUart = '1' and En = '0')
+					else 'Z';
 End Behavioral; 
