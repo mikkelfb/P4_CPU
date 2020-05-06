@@ -31,25 +31,26 @@ architecture Behavioral of SRAM is
 	
 	-- The function below takes a file called program.txt and reads it line by line. Then outputs the new vector with the program in it. 
 	
-	impure function initSRAM return SRAM_type is
-		file textFile: text open read_mode is "..\..\program.txt";
-		variable textLine: line;
-		variable ramContent: SRAM_type;
-		variable bv : bit_vector(ramContent(0)'range);
-	begin
-		for i in 0 to 2**W-1 loop
-			readline(textFile, textLine);
-			read(textLine, bv);
-			ramContent(i) := to_stdlogicvector(bv);
-		end loop;
-		return ramContent;
-	end function;
+--	impure function initSRAM return SRAM_type is
+--		file textFile: text open read_mode is "..\..\program.txt";
+--		variable textLine: line;
+--		variable ramContent: SRAM_type;
+--		variable bv : bit_vector(ramContent(0)'range);
+--	begin
+--		for i in 0 to 2**W-1 loop
+--			readline(textFile, textLine);
+--			read(textLine, bv);
+--			ramContent(i) := to_stdlogicvector(bv);
+--		end loop;
+--		return ramContent;
+--	end function;
 
 	-- Declare the RAM signal and specify a default value.	Quartus Prime
 	-- will create a memory initialization file (.mif) based on the 
 	-- default value.
-	signal arrayReg			: SRAM_type := initSRAM;				-- Create a signal that enables references to the SRAM addresses
-	
+	signal arrayReg			: SRAM_type;				-- Create a signal that enables references to the SRAM addresses
+	attribute sram_init_file : string;
+	attribute sram_init_file of arrayReg : signal is "SRAM.mif";
 	
 	
 	signal addrPointer		: Integer;					-- For making addr to integer

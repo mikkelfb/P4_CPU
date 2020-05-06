@@ -23,14 +23,16 @@ entity CU is
 		UARTEnREAD			: 	out std_logic;
 		UARTEnWrite			:  out std_logic;
 		UARTEnRemoveRxBuf	:	out std_logic;
-		PCLoadEn				:	out std_logic
+		PCLoadEn				:	out std_logic;
+		
+		resetOut				: 	out std_logic 
 	);
 end CU;
 
 Architecture behavioral of CU is
 
-	type stateType is (fetch, decode, execute);
-	signal stateReg, stateNext: stateType;
+	type stateType is (start, fetch, decode, execute);
+	signal stateReg, stateNext: stateType := start;
 	
 	signal opCodeReg: std_logic_vector(4 downto 0);
 	signal EnCU:		std_logic;
@@ -48,8 +50,8 @@ Architecture behavioral of CU is
 		
 		process(stateReg, stateNext, opCodeReg)
 		begin
-		
 			stateNext <= stateReg;
+			resetOut <= '0';
 			SRAMEnInstr <= '0';
 			SRAMEn <= '0';
 			SRAMEnWr <= '0';
@@ -68,6 +70,9 @@ Architecture behavioral of CU is
 			BranchUartEn <= '0';
 			
 			case stateReg is
+				when start =>
+					resetOut <= '1';
+					stateNext <= fetch;
 				when fetch =>
 					SRAMEnInstr <= '1';
 					SRAMEn <= '1';

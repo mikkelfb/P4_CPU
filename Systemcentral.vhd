@@ -4,18 +4,29 @@ USE IEEE.NUMERIC_STD.ALL;
 
 entity systemcentral is 
 	port(
-		clk	: in std_logic;
-		reset : in std_logic;
-		
+		inPutclk	: in std_logic;
 		--WE should make port connections for UART and screen here
 		--Uart connections
 		UARTRX : in std_logic;
-		UARTTX : out std_logic
+		UARTTX : out std_logic;
+		clkOut : out std_logic;
+		stateOut : out std_logic_vector(1 downto 0);
+		opCodeOut : out std_logic_vector(4 downto 0);
+		
+		SevenSegHex0		: out std_logic_vector(7 downto 0);
+		SevenSegHex1		: out std_logic_vector(7 downto 0);
+		SevenSegHex2		: out std_logic_vector(7 downto 0);
+		SevenSegHex3		: out std_logic_vector(7 downto 0);
+		SevenSegHex4		: out std_logic_vector(7 downto 0);
+		SevenSegHex5		: out std_logic_vector(7 downto 0)
 	);
 end systemcentral;
 
 
 Architecture behavioral of systemcentral is
+	--reset
+	signal reset : std_logic;
+	
 	--Opcode line
 	signal opCode											: std_logic_vector(4 downto 0);
 	
@@ -64,9 +75,12 @@ Architecture behavioral of systemcentral is
 	
 	
 	--Seven segment connections
-	signal sevenSegCon									: std_logic_vector(7 downto 0);
-	signal sevenSegAnodeCon								: std_logic_vector(5 downto 0);
+	signal sevenSegCon			:  std_logic_vector(7 downto 0);
+	signal sevenSegAnodeCon		:  std_logic_vector(5 downto 0);
 	
+	
+	signal clk : std_logic;
+	signal clkCounter : unsigned(22 downto 0) := (others=>'0');
 	
 begin
 	--Control unit
@@ -77,7 +91,7 @@ begin
 						IDEn => IDEn , IDEnWr => IDEnWr , GPREnWr => GPREnWr , 
 						EnALU => EnALU , EnSSEG => EnSSEG, PCLoadEn => loadPC ,
 						UARTEnREAD => UARTEnREAD , UARTEnWrite => UARTEnWrite , UARTEnRemoveRxBuf => UARTEnRemoveRxBuf ,
-						state=> debugState);
+						state=> debugState , resetOut=>reset);
 
 	--Instruction decoder
 	IDunit : entity work.Instruction_Decoder(Behavioral)
@@ -129,6 +143,34 @@ begin
 						rx => UARTRX , tx => UARTTX , remDataRxBuf => UARTEnRemoveRxBuf ,
 						rdUart => UARTEnREAD , wrUart => UARTEnWrite , dataInOut => dataLine , rxEmpty => rxEmpty);
 	
+	
+	
+	process(clk , inPutclk)
+	begin
+		if(rising_edge(inPutclk)) then
+			clkCounter <= clkCounter + 1;
+		end if;
+	end process;
+	clk <=	'1' when clkCounter(22) = '1' else
+				'0'; 
+	
+	
+	--SevenSegHex0	<= "11111111";
+	--SevenSegHex1	<= "00000000";
+	--SevenSegHex2	<= "00000000";
+	--SevenSegHex3	<= "00000000";
+	--SevenSegHex4	<= "00000000";
+	--SevenSegHex5	<= "00000000";
+	
+	SevenSegHex0 <=  sevenSegCon when sevenSegAnodeCon = "111110" else (others=>'1');
+	SevenSegHex1 <=  sevenSegCon when sevenSegAnodeCon = "111101" else (others=>'1');
+	SevenSegHex2 <=  sevenSegCon when sevenSegAnodeCon = "111011" else (others=>'1');
+	SevenSegHex3 <=  sevenSegCon when sevenSegAnodeCon = "110111" else (others=>'1');
+	SevenSegHex4 <=  sevenSegCon when sevenSegAnodeCon = "101111" else (others=>'1');
+	SevenSegHex5 <=  sevenSegCon when sevenSegAnodeCon = "011111" else (others=>'1');
+	clkOut <= clk;
+	stateOut <= debugState;
+	opCodeOut <= opCode;
 end behavioral;
 
 --	clk, reset				: 	in std_logic;
