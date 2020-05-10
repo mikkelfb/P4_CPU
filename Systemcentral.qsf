@@ -57,14 +57,11 @@ set_global_assignment -name VHDL_FILE UART_TX.vhd
 set_global_assignment -name VHDL_FILE tb_Instruction_Decoder.vhd
 set_global_assignment -name VHDL_FILE Instruction_Decoder.vhd
 set_global_assignment -name VHDL_FILE tb_UART_TX.vhd
-set_global_assignment -name VHDL_FILE bcdconverter.vhd
 set_global_assignment -name VHDL_FILE baudGenerator.vhd
 set_global_assignment -name VHDL_FILE ALU.vhd
 set_global_assignment -name VHDL_FILE tb_ALU.vhd
 set_global_assignment -name VHDL_FILE GPR.vhd
 set_global_assignment -name VHDL_FILE tb_GPR.vhd
-set_global_assignment -name VHDL_FILE SRAM.vhd
-set_global_assignment -name VHDL_FILE tb_SRAM.vhd
 set_global_assignment -name VHDL_FILE UART_RX.vhd
 set_global_assignment -name VHDL_FILE tb_UART_RX.vhd
 set_global_assignment -name VHDL_FILE tb_baudGenerator.vhd
@@ -81,14 +78,10 @@ set_global_assignment -name VHDL_FILE bin2bcd_16bit.vhd
 set_global_assignment -name VHDL_FILE tb_bin2bcd_16bit.vhd
 set_global_assignment -name VHDL_FILE tb_CU.vhd
 set_global_assignment -name VHDL_FILE Systemcentral.vhd
-set_global_assignment -name VHDL_FILE tb_SRAM_initMEM.vhd
 set_global_assignment -name VHDL_FILE tb_systemcentral.vhd
 set_global_assignment -name MIF_FILE SRAM.mif
 set_global_assignment -name VHDL_INPUT_VERSION VHDL_2008
 set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_U21 -to SevenSegHex0[0]
 set_location_assignment PIN_V21 -to SevenSegHex0[1]
 set_location_assignment PIN_W22 -to SevenSegHex0[2]
@@ -132,17 +125,31 @@ set_location_assignment PIN_C1 -to SevenSegHex5[4]
 set_location_assignment PIN_C2 -to SevenSegHex5[5]
 set_location_assignment PIN_W19 -to SevenSegHex5[6]
 set_location_assignment PIN_M9 -to inPutclk
-set_location_assignment PIN_AA2 -to clkOut
-set_location_assignment PIN_W2 -to stateOut[0]
-set_location_assignment PIN_Y3 -to stateOut[1]
-set_location_assignment PIN_N2 -to opCodeOut[0]
-set_location_assignment PIN_N1 -to opCodeOut[1]
-set_location_assignment PIN_U2 -to opCodeOut[2]
-set_location_assignment PIN_U1 -to opCodeOut[3]
-set_location_assignment PIN_L2 -to opCodeOut[4]
-set_global_assignment -name PARTITION_NETLIST_TYPE POST_SYNTH -section_id "SRAM:SRAMunit"
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id "SRAM:SRAMunit"
-set_global_assignment -name PARTITION_COLOR 39423 -section_id "SRAM:SRAMunit"
+set_location_assignment PIN_L1 -to clkOut
 set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
+set_global_assignment -name QIP_FILE SRAM.qip
+set_global_assignment -name VHDL_FILE SRAMVHead.vhd
+set_global_assignment -name VHDL_FILE DataBus.vhd
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_AA2 -to debugLightOut[0]
+set_location_assignment PIN_AA1 -to debugLightOut[1]
+set_location_assignment PIN_W2 -to debugLightOut[2]
+set_location_assignment PIN_Y3 -to debugLightOut[3]
+set_location_assignment PIN_N2 -to debugLightOut[4]
+set_location_assignment PIN_N1 -to debugLightOut[5]
+set_location_assignment PIN_U2 -to debugLightOut[6]
+set_location_assignment PIN_U1 -to debugLightOut[7]
+set_location_assignment PIN_L2 -to debugLightOut[8]
+set_location_assignment PIN_U13 -to debugSwitchIn[0]
+set_location_assignment PIN_V13 -to debugSwitchIn[1]
+set_location_assignment PIN_T13 -to debugSwitchIn[2]
+set_location_assignment PIN_T12 -to debugSwitchIn[3]
+set_location_assignment PIN_AA15 -to debugSwitchIn[4]
+set_location_assignment PIN_AB15 -to debugSwitchIn[5]
+set_location_assignment PIN_AA14 -to debugSwitchIn[6]
+set_location_assignment PIN_AA13 -to debugSwitchIn[7]
+set_location_assignment PIN_AB13 -to debugSwitchIn[8]
+set_location_assignment PIN_AB12 -to debugSwitchIn[9]
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_instance_assignment -name PARTITION_HIERARCHY sramu_d7291 -to "SRAM:SRAMunit" -section_id "SRAM:SRAMunit"

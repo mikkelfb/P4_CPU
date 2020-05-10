@@ -22,7 +22,6 @@ entity ALU is
 		ALUA							:	in STD_LOGIC_VECTOR(15 downto 0);
 		ALUB							:	in STD_LOGIC_VECTOR(15 downto 0);
 		ALUOut						:	out STD_LOGIC_VECTOR(15 downto 0);
-		EnAlu							: 	in STD_LOGIC;
 		zeroFlag, carryFlag		: 	out STD_LOGIC
 	);
 end ALU;
@@ -31,10 +30,8 @@ architecture Behavioral of ALU is 									-- Implementation of ALU
 	signal aluRes	: std_logic_vector(15 downto 0);				-- Signal which holds the result of operation until set to the ALUOut
 	signal tempForCarry	: std_logic_vector(16 downto 0);		-- Signal used for carry flag
 begin
-
-process (EnAlu, opCode, ALUA , ALUB) 	-- Process takes in EnAlu, opCode, ALUA , ALUB as parameters such that they don't create latches.
-	begin
-		if(EnAlu = '1') then					-- Checks if the ALU is enabled or not
+	process (opCode, ALUA , ALUB) 	-- Process takes in, opCode, ALUA , ALUB as parameters such that they don't create latches.
+		begin
 			case opCode is						-- Case for switching the opcode
 				when "00010" => 				-- Write to SRAM
 					aluRes <= (ALUA);
@@ -77,17 +74,14 @@ process (EnAlu, opCode, ALUA , ALUB) 	-- Process takes in EnAlu, opCode, ALUA , 
 				when others =>					-- All opcodes which the ALU should do nothing. 
 					aluRes <= x"0000";
 			end case;
-		else
-			aluRes <= "ZZZZZZZZZZZZZZZZ";	-- Sets the output as a high impedanse if the ALU is disabled.
-		end if;	
-end process;
+	end process;
 
-zeroFlag <= '1' when aluRes = x"0000" else -- Checks if output is equal to zero and sets zeroflag accordingly
-				'0';
-ALUOut <= aluRes; 
+	zeroFlag <= '1' when aluRes = x"0000" else -- Checks if output is equal to zero and sets zeroflag accordingly
+					'0';
+	ALUOut <= aluRes; 
 
-tempForCarry <= ('0' & ALUA) + ('0' & ALUB);		-- Checks if there is a carry by concarnating ALUA and ALUB with zero and outputs the sum.
-carryFlag <= tempForCarry(16); 						-- Makes the carry flag the 16th bit of the above addition
+	tempForCarry <= ('0' & ALUA) + ('0' & ALUB);		-- Checks if there is a carry by concarnating ALUA and ALUB with zero and outputs the sum.
+	carryFlag <= tempForCarry(16); 						-- Makes the carry flag the 16th bit of the above addition
 
 
 end Behavioral;

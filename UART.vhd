@@ -16,27 +16,27 @@ entity UART is
 		rx							: 	in std_logic; -- Port for rx connector
 		tx							: 	out std_logic; --Port for tx connector
 		remDataRxBuf			: 	in std_logic; 
-		rdUart					: 	in std_logic;
 		wrUart					:	in std_Logic; --Set if we wnt to read or write from UART module 
 		txFull, rxEmpty		: 	out std_logic; --Set according to FIFO bufferes
-		dataInOut				: 	inout std_logic_vector(15 downto 0)
+		dataIn					: 	in std_logic_vector(15 downto 0);
+		dataOut					: 	out std_logic_vector(15 downto 0)
 	);
 
 end UART;
 
 architecture behavioral of UART is
 	signal tick						: std_logic; --signal for mapping tick from baud generator to the TX and RX
-	signal rxDoneTick			: std_logic; --Is set when RX is done is mapped to RX fifo write, so the FIFO stores the RX signal when it is done.
-	signal txFifoOut			: std_logic_vector(7 downto 0); --Signal used to map FIFO_TX output to TX data input
-	signal rxDataOut			: std_logic_vector(7 downto 0); --Signal used to map RX data output to FIFO_RX input
+	signal rxDoneTick				: std_logic; --Is set when RX is done is mapped to RX fifo write, so the FIFO stores the RX signal when it is done.
+	signal txFifoOut				: std_logic_vector(7 downto 0); --Signal used to map FIFO_TX output to TX data input
+	signal rxDataOut				: std_logic_vector(7 downto 0); --Signal used to map RX data output to FIFO_RX input
 	signal txEmpty 				: std_logic; --Signal for TX empty, used to generate a start signal to TX -> TX start when NOT empty
-	signal txFifoNotEmpty 	: std_logic; -- see above
-	signal txDoneTick			: std_logic; -- Signal for when TX is done, is used to "delete" latest data in TX FIFO buffer
+	signal txFifoNotEmpty 		: std_logic; -- see above
+	signal txDoneTick				: std_logic; -- Signal for when TX is done, is used to "delete" latest data in TX FIFO buffer
 	signal rData					: std_logic_vector(7 downto 0); --Data received from UART
 	signal wData					: std_logic_vector(7 downto 0); --Data to send with UART
 	
 	signal barrelReg				: std_logic_vector(15 downto 0); --Barrel register for TX as we can only send 8 bit, and we want to send 16 bit numbers.
-	signal internWrUart		: std_logic :='0'; --Used with barrelReg, is set for the TX FIFO buffer when data  is in barrelReg
+	signal internWrUart			: std_logic :='0'; --Used with barrelReg, is set for the TX FIFO buffer when data  is in barrelReg
 	signal barrelRegCounter		: std_logic_vector(1 downto 0); --Counter used with barrelReg to determine state
 	signal barrelRegCounterNext	: std_logic_vector(1 downto 0); --Next state used with counter
 	
@@ -65,16 +65,15 @@ begin
 	txFifoNotEmpty <= not txEmpty;
 
 	
-	--sets output to high impedanse if you are not reading from UART, and concartenate rData with zeroes such that the output is 16-bit long for databus
-	dataInOut <="00000000" & rData  when (rdUart = '1' and wrUart = '0') else (others=>'Z');
-		
+	--sets output to 0 if you are not reading from UART, and concartenate rData with zeroes such that the output is 16-bit long for databus
+	dataOut <="00000000" & rData;
 
 	--Logic for writing data to UART
-	process(clk , wrUart , dataInOut)	
+	process(clk , wrUart)	
 	begin
 		if(rising_edge(clk)) then
 			if(wrUart = '1') then
-				barrelReg <= dataInOut; --Sets input to barrel registor as, the FIFO buffer is only 8 bit long
+				barrelReg <= dataIn; --Sets input to barrel registor as, the FIFO buffer is only 8 bit long
 			end if;
 			barrelRegCounter <= barrelRegCounterNext; -- Sets next state for barrelcounter
 		end if;
