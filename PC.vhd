@@ -22,7 +22,8 @@ entity PC is
 	generic(N: integer := 7);
 	port (
 		clk, reset				:		in STD_LOGIC;		
-		load						: 		in STD_LOGIC;			
+		loadCU					: 		in STD_LOGIC;
+		loadBranch				:		in std_logic;
 		branchIn					:		in STD_LOGIC_VECTOR(N-1 downto 0);
 		enPc						: 		in STD_LOGIC;
 		sramAddr					:		out STD_LOGIC_VECTOR(N-1 downto 0)
@@ -39,8 +40,6 @@ begin
 	begin
 		if (reset = '1') then
 			rReg <= (others => '0');
-		--elsif (load = '1') then
-			--rReg <= ;
 		elsif (rising_edge(clk)) then
 			rReg <= rNext;
 		end if;
@@ -49,7 +48,8 @@ begin
 	
 	-- next-state logic
 	rNext <=	(others=>'0')			when reset = '1'				else
-				unsigned(branchIn)	when load = '1'				else
+				unsigned(branchIn)	when loadBranch = '1'		else
+				unsigned(branchIn)	when loadCU = '1'				else
 				rReg + 1					when enPc = '1'  				else
 				rReg;
 				

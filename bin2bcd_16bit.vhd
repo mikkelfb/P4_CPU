@@ -84,8 +84,6 @@ begin
 		bcd2 <= STD_LOGIC_VECTOR(bcd(11 downto 8));
 		bcd3 <= STD_LOGIC_VECTOR(bcd(15 downto 12));
 		bcd4 <= STD_LOGIC_VECTOR(bcd(19 downto 16));
-
-	  
 	end process;            
   
 end Behavioral;

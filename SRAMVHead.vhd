@@ -32,8 +32,8 @@ begin
 			wren 		=> EnWrite, 	--write enable
 			q 			=> dataOutSRAM --dataout
 		);
-		
-		
+	
+	
 	InstructionOut <= dataOutSRAM(14 downto 0);
 	dataout 			<= dataOutSRAM;
 	

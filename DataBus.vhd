@@ -11,7 +11,7 @@ Entity DataBus is
 		SRAMIn 	: in std_Logic_vector(15 downto 0);
 		ALUIn 	: in std_Logic_vector(15 downto 0);
 		UARTIn	: in std_logic_vector(15 downto 0);
-		dataOut		: out std_logic_vector(15 downto 0)
+		dataOut	: out std_logic_vector(15 downto 0)
 	);
 end DataBus;
 
@@ -28,9 +28,9 @@ begin
 	end process;
 	
 	with Ctr select nreg <=
-		SRAMIn 			when "00",
-		ALUIn 			when "01",
-		UARTIn 			when "10",
+		SRAMIn 			when "01",
+		ALUIn 			when "10",
+		UARTIn 			when "11",
 		(others=>'0')	when others;
 	dataOut <= reg;
 end Behavioral;

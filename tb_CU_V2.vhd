@@ -3,10 +3,10 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 use IEEE.std_logic_unsigned.all;
 
-entity tb_CU is
-end tb_CU;
+entity tb_CU_V2 is
+end tb_CU_V2;
 
-Architecture behavioral of tb_CU is
+Architecture behavioral of tb_CU_V2 is
 	component CU
 	port (
 		state					: 	out std_logic_vector(2 downto 0);
@@ -48,15 +48,15 @@ Architecture behavioral of tb_CU is
 	signal UARTRemoveRxBuf	: 	std_logic; 
 	signal UARTEnWrite		:  std_logic;
 	signal resetIn				: 	std_logic:='0';
-	signal resetOut			: 	std_logic:=;
-	signal DataBusCtr			:  std_logic_vector(1 downto 0)
+	signal resetOut			: 	std_logic;
+	signal DataBusCtr			:  std_logic_vector(1 downto 0);
 	
 	constant T: time := 20 ns;
 	
-	begin
+begin
 	
 	uut: CU port map (
-		state => clkstate,
+		state => state,
 		clk => clk,
 		opCode => opCode,
 		SRAMaddrCtr => SRAMaddrCtr,
@@ -88,7 +88,8 @@ Architecture behavioral of tb_CU is
 	process
 	begin
 		opCode <= "00000";
-		for i in 0 to 3 loop
+		for i in 0 to 16 loop
+			wait until rising_edge(clk);
 			wait until rising_edge(clk);
 			wait until rising_edge(clk);
 			wait until rising_edge(clk);

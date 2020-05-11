@@ -11,8 +11,8 @@ entity dispHexMux is
 			en:	in std_logic;
 			an: out std_logic_vector (5 downto 0);
 			sseg : out std_logic_vector ( 7 downto 0)
-) ;
-end dispHexMux ;
+	);
+end dispHexMux;
 
 
 architecture arch of dispHexMux is
@@ -23,7 +23,6 @@ architecture arch of dispHexMux is
 	signal hex										: std_logic_vector (3 downto 0);
 	signal dp										: std_logic;
 	signal reg										: std_logic_vector(15 downto 0);
-	
 begin
 
 	bIn2BCD : entity work.bin2bcd_16bit(behavioral)
@@ -47,7 +46,8 @@ begin
 	
 	qNext <= qReg + 1;
 	
-	sel <= std_logic_vector(qReg(N-1 downto N-3)) ;
+	sel <= std_logic_vector(qReg(N-1 downto N-3));
+	
 	process(sel, hex0, hex1, hex2, hex3, hex4, dpIn)
 	begin
 		case sel is 
@@ -81,20 +81,20 @@ begin
 		with hex select
 			sseg (6 downto 0) <=
 				"0000001" when "0000",		-- 0
-				"1001111" when "0001",		-- 1
-				"0010010" when "0010",		-- 2
-				"0000110" when "0011",		-- 3
-				"1001100" when "0100",		-- 4
-				"0100100" when "0101",		-- 5
-				"0100000" when "0110",		-- 6
-				"0001111" when "0111",		-- 7
+				"1111001" when "0001",		-- 1
+				"0100100" when "0010",		-- 2
+				"0110000" when "0011",		-- 3
+				"0011001" when "0100",		-- 4
+				"0010010" when "0101",		-- 5
+				"0000010" when "0110",		-- 6
+				"1111000" when "0111",		-- 7
 				"0000000" when "1000",		-- 8
-				"0000100" when "1001",		-- 9
+				"0011000" when "1001",		-- 9
 				"0001000" when "1010",		-- A
-				"1100000" when "1011",		-- B
-				"0110001" when "1100",		-- C
-				"1000010" when "1101",		-- D
-				"0110000" when "1110",		-- E
-				"0111000" when others;		-- F
+				"0000011" when "1011",		-- B
+				"1000110" when "1100",		-- C
+				"0100001" when "1101",		-- D
+				"0000110" when "1110",		-- E
+				"0001110" when others;		-- F
 		sseg(7) <= dp;
 end arch;
