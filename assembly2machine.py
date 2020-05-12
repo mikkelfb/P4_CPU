@@ -28,7 +28,7 @@ GPR = { "R0": "000",
         "R7": "111"}
 
 assemblyFile = open("assembly.txt", 'r')
-machineCodeFile = open("program.txt", 'w+')
+machineCodeFile = open("program.bin", 'w+')
 machineCodeFile.close()
 
 Lines = assemblyFile.readlines()
