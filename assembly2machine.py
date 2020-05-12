@@ -36,7 +36,7 @@ Lines = assemblyFile.readlines()
 machineCode = ""
 
 for line in Lines:
-    machineCodeFile = open("program.txt", "a")
+    machineCodeFile = open("program.bin", "a")
     code = line.split()
     if code[0] == "NOP":
         machineCode = "0000000000000000"
