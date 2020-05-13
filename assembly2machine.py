@@ -41,42 +41,41 @@ for line in Lines:
     if code[0] == "NOP":
         machineCode = "0000000000000000"
     elif code[0] == "LAS":
-        machineCode = opCodes["LAS"] + GPR[code[1]] + '{0:07b}'.format(int(code[2][1:])) + "0"
+        machineCode = "0" + '{0:07b}'.format(int(code[2][1:])) + GPR[code[1]] + opCodes["LAS"] 
     elif code[0] == "SKR":
-        machineCode = opCodes["SKR"] + GPR[code[1]] + '{0:07b}'.format(int(code[2][1:])) + "0"
+        machineCode = "0" + '{0:07b}'.format(int(code[2][1:])) + GPR[code[1]] + opCodes["SKR"]
     elif code[0] == "STO":
-        machineCode = opCodes["STO"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["STO"]
     elif code[0] == "MIN":
-        machineCode = opCodes["MIN"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["MIN"]
     elif code[0] == "LIG":
-        machineCode = opCodes["LIG"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["LIG"]
     elif code[0] == "AND":
-        machineCode = opCodes["AND"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["AND"]
     elif code[0] == "ORR":
-        machineCode = opCodes["ORR"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["ORR"]
     elif code[0] == "ADD":
-        machineCode = opCodes["ADD"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["ADD"]
     elif code[0] == "SUB":
-        machineCode = opCodes["SUB"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["SUB"]
     elif code[0] == "DIV":
-        machineCode = opCodes["DIV"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["DIV"]
     elif code[0] == "MUL":
-        machineCode = opCodes["MUL"] + GPR[code[1]] + GPR[code[2]] + "0" + GPR[code[3]] + "0"
+        machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["MUL"]
     elif code[0] == "HOP":
-        machineCode = opCodes["HOP"] + "000" + format(code[1][1:], 'b') + "0"
+        machineCode =  "0" + format(code[1][1:], 'b') + "000" + opCodes["HOP"]
     elif code[0] == "UAL":
-        machineCode = opCodes["UAL"] + GPR[code[1]] + "00000000"
+        machineCode = "00000000" + GPR[code[1]] + opCodes["UAL"]
     elif code[0] == "UAS":
-        machineCode = opCodes["UAS"] + GPR[code[1]] + "00000000"
+        machineCode = "00000000" + GPR[code[1]] + opCodes["UAS"]
     elif code[0] == "VIS":
-        machineCode = opCodes["VIS"] + GPR[code[1]] + "00000000"
+        machineCode = "00000000" + GPR[code[1]] + opCodes["VIS"]
     elif code[0] == "HOPC":
-        machineCode = opCodes["HOPC"] + "000" + '{0:07b}'.format(int(code[1][1:])) + "0"
+        machineCode = "0" + '{0:07b}'.format(int(code[1][1:])) + "000" + opCodes["HOPC"]
     elif code [0] == "HOPUC":
-        machineCode = opCodes["HOPUC"] + "000" + '{0:07b}'.format(int(code[1][1:])) + "0"
+        machineCode = "0" + '{0:07b}'.format(int(code[1][1:])) + "000" + opCodes["HOPUC"]
 
-    print (machineCode[::-1])
-    machineCodeFile.write(machineCode[::-1])
+    machineCodeFile.write(machineCode)
     machineCodeFile.write("\n")
     machineCodeFile.close()
 
