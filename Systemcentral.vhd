@@ -12,7 +12,8 @@ entity systemcentral is
 		clkOut : out std_logic;
 		debugLightOut	: out std_logic_vector(8 downto 0);
 		debugSwitchIn	: in std_Logic_vector(9 downto 0);
-
+		testOUT1			: out std_logic;
+		testOUT2			: out std_logic;
 		SevenSegHex0		: out std_logic_vector(7 downto 0);
 		SevenSegHex1		: out std_logic_vector(7 downto 0);
 		SevenSegHex2		: out std_logic_vector(7 downto 0);
@@ -94,18 +95,20 @@ Architecture behavioral of systemcentral is
 	signal clkCounter : unsigned(22 downto 0) := (others=>'0');
 	
 begin
+	testOUT1 <= '1';
+	testOUT2 <= '0';
 --clock slowdown for FPGA testing
-	clkOut <= clk;
-	process(clk , inPutclk)
-	begin
-		if(rising_edge(inPutclk)) then
-			clkCounter <= clkCounter + 1;
-		end if;
-	end process;
-	clk <=	'1' when clkCounter(22) = '1' else
-				'0'; 
+--	clkOut <= clk;
+--	process(clk , inPutclk)
+--	begin
+--		if(rising_edge(inPutclk)) then
+--			clkCounter <= clkCounter + 1;
+--		end if;
+--	end process;
+--	clk <=	'1' when clkCounter(22) = '1' else
+--				'0'; 
 	
---	clk<= inPutclk;
+	clk<= inPutclk;
 	
 	reset <= resetFromCU;
 	
@@ -238,7 +241,7 @@ begin
 			txFull 			=> UARTTxFull,
 			rxEmpty 			=> rxEmpty,
 			dataIn 			=> fromDataBus,
-			dataOut 			=>dataUARTOut
+			dataOut 			=> dataUARTOut
 		);
 	
 	
