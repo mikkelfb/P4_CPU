@@ -11,43 +11,47 @@ component Branching_Control
 	port(
 			CarryFlag 				: in STD_LOGIC;
 			ZeroFlag 				: in STD_LOGIC;
-			EN							: in STD_LOGIC;
-			EN_Latch					: in STD_LOGIC;
-			PC_Control 				: out STD_LOGIC
+			En							: in STD_LOGIC;
+			EnLatchALU				: in STD_LOGIC;
+			EnUart					: in std_logic;
+			PCControl 				: out STD_LOGIC;
+			UartBranch				: in std_logic
 	);
 end component;
 
 signal CarryFlag 					: STD_LOGIC;
-signal ZeroFlag 					: STD_LOGIC;
-signal EN							: STD_LOGIC;
-signal EN_Latch					: STD_LOGIC;
-signal PC_Control 				: STD_LOGIC;
+signal ZeroFlag 					: STD_LOGIC := '0';
+signal EN							: STD_LOGIC := '0';
+signal EnLatchALU					: STD_LOGIC := '0';
+signal EnUart						: std_Logic := '0';
+signal PCControl 					: STD_LOGIC := '0';
+signal UartBranch					: std_Logic := '0';
 
 begin 
 
 	uut: Branching_Control port map(
-		CarryFlag  => CarryFlag,
-		ZeroFlag   => ZeroFlag,
-		EN			  => EN, 
-		EN_Latch	  => EN_Latch,
-		PC_Control => PC_Control
+		CarryFlag  	=> CarryFlag,
+		ZeroFlag   	=> ZeroFlag,
+		EN			  	=> EN, 
+		EnLatchALU	=> EnLatchALU,
+		PCControl 	=> PCControl,
+		UartBranch	=> UartBranch,
+		EnUart		=> EnUart
 	);
 	
 	process 
 	begin 
-		EN <= '1';
-		EN_Latch <= '1';
+		EnLatchALU <= '1';
 		ZeroFlag <= '1';
 		wait for 10 ns;
-		EN_Latch <= '0';
-		wait for 10 ns;
+		EnLatchALU <= '0';
 		ZeroFlag <= '0';
+		EN <= '1';
 		wait for 10 ns;
 		EN <= '0';
 		wait for 10 ns;
-		ZeroFlag <= '0';
-		EN <= '1';
-		EN_Latch <= '1';
+		UartBranch <= '0';
+		EnUart <= '1';
 		wait for 10 ns;
 	end process;
 end Behavioral; 

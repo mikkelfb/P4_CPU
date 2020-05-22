@@ -63,7 +63,7 @@ for line in Lines:
     elif code[0] == "MUL":
         machineCode = "0" + GPR[code[3]] + "0" + GPR[code[2]] + GPR[code[1]] + opCodes["MUL"]
     elif code[0] == "HOP":
-        machineCode =  "0" + format(code[1][1:], 'b') + "000" + opCodes["HOP"]
+        machineCode =  "0" + '{0:07b}'.format(int(code[1][1:]))+ "000" + opCodes["HOP"]
     elif code[0] == "UAL":
         machineCode = "00000000" + GPR[code[1]] + opCodes["UAL"]
     elif code[0] == "UAS":

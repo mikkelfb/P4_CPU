@@ -118,6 +118,8 @@ set_location_assignment PIN_AA14 -to debugSwitchIn[6]
 set_location_assignment PIN_AA13 -to debugSwitchIn[7]
 set_location_assignment PIN_AB13 -to debugSwitchIn[8]
 set_location_assignment PIN_AB12 -to debugSwitchIn[9]
+set_location_assignment PIN_T17 -to UARTTX
+set_location_assignment PIN_T15 -to UARTRX
 set_global_assignment -name HEX_FILE my_init_file.hex
 set_global_assignment -name VHDL_FILE CU.vhd
 set_global_assignment -name VHDL_FILE UART_TX.vhd
@@ -132,7 +134,6 @@ set_global_assignment -name VHDL_FILE tb_GPR.vhd
 set_global_assignment -name VHDL_FILE UART_RX.vhd
 set_global_assignment -name VHDL_FILE tb_UART_RX.vhd
 set_global_assignment -name VHDL_FILE tb_baudGenerator.vhd
-set_global_assignment -name VHDL_FILE flagBuf.vhd
 set_global_assignment -name VHDL_FILE FIFO.vhd
 set_global_assignment -name VHDL_FILE PC.vhd
 set_global_assignment -name VHDL_FILE Branching_Control.vhd
@@ -150,10 +151,10 @@ set_global_assignment -name QIP_FILE SRAM.qip
 set_global_assignment -name VHDL_FILE SRAMVHead.vhd
 set_global_assignment -name VHDL_FILE DataBus.vhd
 set_global_assignment -name VHDL_FILE tb_CU_V2.vhd
+set_global_assignment -name VHDL_FILE tb_SRAMVHead.vhd
+set_global_assignment -name VHDL_FILE tb_PC_V2.vhd
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_location_assignment PIN_T17 -to UARTTX
-set_location_assignment PIN_T15 -to UARTRX
 set_instance_assignment -name IO_STANDARD "2.5 V" -to UARTTX
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

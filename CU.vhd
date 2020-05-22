@@ -66,6 +66,7 @@ Architecture behavioral of CU is
 			SRAMaddrCtr 	<= '0';
 			SRAMEnWr 		<= '0';
 			EnPC 				<= '0';
+			loadFromBranch	<= '0';
 			loadFromCU 		<= '0';
 			BranchEn 		<= '0';
 			BranchUartEn 	<= '0';
@@ -139,8 +140,10 @@ Architecture behavioral of CU is
 							DataBusCtr <= "10"; --Read from ALU
 						when "10001" => --HOPC
 							branchEn <= '1';
+							loadFromBranch <= '1';
 						when "10010" => --HOPUC
 							branchUartEn <= '1';
+							loadFromBranch <= '1';
 						when others =>
 					end case;
 					stateNext <= writeBack;
@@ -192,7 +195,7 @@ Architecture behavioral of CU is
 							EnSSEG <= '1';
 							DataBusCtr <= "10"; --Read from ALU
 						when "10001" => --HOPC
-						when "10010" => --HOPUC
+						when "10010" => --HOPUC	
 						when others =>
 					end case;
 					stateNext <= fetch;

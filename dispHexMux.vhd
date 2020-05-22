@@ -16,7 +16,7 @@ end dispHexMux;
 
 
 architecture arch of dispHexMux is
-	constant N										: integer:= 8; 		--Use 8 for simulations, use 19 on hardware
+	constant N										: integer:= 3; 		--Use 8 for simulations, use 19 on hardware
 	signal qReg, qNext							: unsigned (N-1 downto 0):=(others=>'0');
 	signal sel										: std_logic_vector (2 downto 0);
 	signal hex4, hex3, hex2, hex1, hex0		: std_logic_vector(3 downto 0);

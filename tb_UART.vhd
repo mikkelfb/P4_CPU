@@ -12,10 +12,11 @@ component UART
 		clk, reset				: 	in std_logic;
 		rx							: 	in std_logic; -- Port for rx connector
 		tx							: 	out std_logic; --Port for tx connector
-		rd_uart, wr_uart		:	in std_Logic; --Set if we wnt to read or write from UART module 
-		tx_full, rx_empty		: 	out std_logic; --Set according to FIFO bufferes
-		dataInOut				: 	inout std_logic_vector(15 downto 0);
-		removedata_RX_buf		:	in std_logic
+		remDataRxBuf			: 	in std_logic; 
+		wrUart					:	in std_Logic; --Set if we wnt to read or write from UART module 
+		txFull, rxEmpty		: 	out std_logic; --Set according to FIFO bufferes
+		dataIn					: 	in std_logic_vector(15 downto 0);
+		dataOut					: 	out std_logic_vector(15 downto 0)
 	);
 end component;
 
@@ -23,17 +24,16 @@ constant T: time 			:= 20 ns;
 constant baudTime: time := 52 us;
 
 signal clk 						: std_logic;
-signal reset 					: std_logic;
+signal reset 					: std_logic := '0';
 signal rx 						: std_logic;
 signal tx 						: std_logic;
-signal rd_uart 				: std_logic;
-signal wr_uart 				: std_logic;
-signal tx_full 				: std_logic;
-signal rx_empty 				: std_logic;
-signal dataInOut 				: std_logic_vector(15 downto 0);
-signal removedata_RX_buf	: std_logic;
+signal dataIn 					: std_logic_vector(15 downto 0);
+signal dataOut					: std_logic_vector(15 downto 0);
+signal wrUart 					: std_logic := '0';
+signal txFull 					: std_logic;
+signal rxEmpty 				: std_logic;
+signal remDataRxBuf			: std_logic :='0';
 
-signal testDataToTX			: std_logic_vector(15 downto 0);
 begin
 
 	uut: UART port map(
@@ -41,12 +41,12 @@ begin
 		reset => reset,
 		rx => rx,
 		tx => tx,
-		rd_uart => rd_uart,
-		wr_uart => wr_uart,
-		tx_full => tx_full,
-		rx_empty => rx_empty,
-		dataInOUt => dataInOUt,
-		removedata_RX_buf => removedata_RX_buf
+		dataIn => dataIn,
+		dataOut => dataOut,
+		wrUart => wrUart,
+		txFull => txFull,
+		rxEmpty => rxEmpty,
+		remDataRxBuf => remDataRxBuf
 	);
 	
 	process
@@ -57,20 +57,16 @@ begin
 		wait for T/2;
 	end process;
 	
-	dataInOut <= testDataToTX when (wr_uart = '1' and rd_uart = '0') else (others => 'Z');
-	
 	process
 	begin
-		removedata_RX_buf <= '0';
-		rd_uart <= '0';
 		reset <= '1';
 		wait until falling_edge(clk);
 		reset <= '0';
 		wait until falling_edge(clk);
-		wr_uart <= '1';
-		testDataToTX <= x"F00F";
+		wrUart <= '1';
+		dataIn <= x"F00F";
 		wait until falling_edge(clk);
-		wr_uart <= '0';
+		wrUart <= '0';
 		wait until falling_edge(clk);
 		wait until falling_edge(clk);
 		wait until falling_edge(clk);
@@ -98,16 +94,11 @@ begin
 		wait for baudTime;
 		wait for baudTime;
 		wait until falling_edge(clk);
-		rd_uart <= '1';
 		wait until falling_edge(clk);
 		wait until falling_edge(clk);
+		remDataRxBuf <= '1';
 		wait until falling_edge(clk);
-		wait until falling_edge(clk);
-		wait until falling_edge(clk);
-		rd_uart <= '0';
-		removedata_RX_buf <= '1';
-		wait until falling_edge(clk);
-		removedata_RX_buf <= '0';
+		remDataRxBuf <= '0';
 		wait for baudTime;
 	end process;
 	

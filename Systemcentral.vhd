@@ -107,7 +107,7 @@ begin
 --	end process;
 --	clk <=	'1' when clkCounter(22) = '1' else
 --				'0'; 
-	
+--	
 	clk<= inPutclk;
 	
 	reset <= resetFromCU;

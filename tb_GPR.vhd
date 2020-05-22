@@ -15,9 +15,9 @@ Architecture behavior of tb_GPR IS
 		EnWr							: 	in STD_LOGIC;
 		clk							:	in STD_LOGIC;
 		dataIn						: 	in STD_LOGIC_VECTOR(15 downto 0);
-		
 		ALUA							:	out STD_LOGIC_VECTOR(15 downto 0);
-		ALUB							:	out STD_LOGIC_VECTOR(15 downto 0)
+		ALUB							:	out STD_LOGIC_VECTOR(15 downto 0);
+		reset							:	in std_Logic
 	);
 	END COMPONENT;
 	
@@ -27,9 +27,9 @@ Architecture behavior of tb_GPR IS
 	signal EnWr							: 	STD_LOGIC;
 	signal clk							:	STD_LOGIC;
 	signal dataIn						: 	STD_LOGIC_VECTOR(15 downto 0);
-	
 	signal ALUA							:	STD_LOGIC_VECTOR(15 downto 0);
 	signal ALUB							:	STD_LOGIC_VECTOR(15 downto 0);
+	signal reset						: 	std_Logic;
 	
 	signal addrCounter				:	STD_LOGIC_VECTOR(2 downto 0) := "000";		-- Counter used to switch between addresses
 	
@@ -43,7 +43,8 @@ Architecture behavior of tb_GPR IS
 			EnWr		=> EnWr,
 			dataIn 	=> dataIn,
 			ALUA		=> ALUA,
-			ALUB		=> ALUB
+			ALUB		=> ALUB,
+			reset		=> reset
 		);
 		
 		process
@@ -81,6 +82,8 @@ Architecture behavior of tb_GPR IS
 				wait until falling_edge(clk);
 			end loop;
 			
+			reset <= '1';
+			wait until falling_edge(clk);
 		end process;
 	
 

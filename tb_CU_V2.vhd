@@ -88,7 +88,7 @@ begin
 	process
 	begin
 		opCode <= "00000";
-		for i in 0 to 16 loop
+		for i in 0 to 18 loop
 			wait until rising_edge(clk);
 			wait until rising_edge(clk);
 			wait until rising_edge(clk);
